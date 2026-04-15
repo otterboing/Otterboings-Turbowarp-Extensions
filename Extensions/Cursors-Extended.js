@@ -2,7 +2,7 @@
 // Original by https://github.com/otterboing
 (function (Scratch) {
 
-const canvas = document.querySelector('#app canvas');
+const canvas = document.querySelector('canvas');
 let currentCursor = 'default'
 
 class extendedCursors {
@@ -37,6 +37,36 @@ class extendedCursors {
             type: Scratch.ArgumentType.STRING,
             defaultValue: "https://raw.githubusercontent.com/otterboing/Cursors/main/16px/default.png",
            },
+           offsetX: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "0",
+           },
+           offsetY: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "0",
+           }
+
+          }
+        },
+        {
+          opcode: 'setCursorFromUrlWithScale',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Set cursor from URL: [url] scale to width: [width] px height: [height] px, offset by X: [offsetX] Y: [offsetY]',
+		  hideFromPalette: true,
+          arguments: {
+
+           url: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "https://raw.githubusercontent.com/otterboing/Cursors/main/16px/default.png",
+           },
+		   width: {
+			type: Scratch.ArgumentType.STRING,
+			defaultValue: "16",
+		   },
+		   height: {
+			type: Scratch.ArgumentType.STRING,
+			defaultValue: "16",
+		   },
            offsetX: {
             type: Scratch.ArgumentType.STRING,
             defaultValue: "0",
@@ -99,9 +129,27 @@ class extendedCursors {
       }
     };
   }
+	
 
   setCursorFromUrl(args) {
     canvas.style.cursor = "url('"+args.url+"') "+args.offsetX+" "+args.offsetY+", default";
+    currentCursor = args.url;
+  };
+  
+  setCursorFromUrlWithScale(args) {
+	
+	// Source - https://stackoverflow.com/a/61259685
+// Posted by cagdas_ucar, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-04-15, License - CC BY-SA 4.0
+	
+	const img = new Image();
+	img.src = args.url
+	const canvas = document.createElement("canvas");
+	createImageBitmap(img, { resizeWidth: args.width, resizeHeight: args.height, resizeQuality: 'high' })
+	.then(imageBitmap => 
+    canvas.getContext('2d').drawImage(imageBitmap, 0, 0)
+	);
+    canvas.style.cursor = "url('canvas.toDataURL()') "+args.offsetX+" "+args.offsetY+", default";
     currentCursor = args.url;
   };
 
@@ -114,8 +162,9 @@ class extendedCursors {
     return currentCursor
   }
 
+
   Notice() {
-    alert("Loading a cursor from an image url will use it's full resolution 256x256px will be MASSIVE. I have plans to implement built in resizing but for now you have to maunally resize or use Sharkpools Image extension. 🤗 Sharkpool's extension:  https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js ");
+    alert("Loading a cursor from an image url will use it's full resolution. For example: 256x256px will be MASSIVE! I have plans to implement built in resizing but for now you have to maunally resize or use Sharkpools Image extension. 🤗 Sharkpool's extension:  https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js ");
   }
   
 }
