@@ -1,5 +1,6 @@
 // MIT Licence 
 // Original by https://github.com/otterboing
+// https://github.com/otterboing/Turbowarp-Extensions/blob/main/Extensions/smallMath.js
 (function (Scratch) {
 
         function offDoMath(input1,math,input2) {
@@ -42,6 +43,28 @@
         number = input1 <= input2
         }
     return number
+    }
+
+    function offCompareGet(greaterLesser,input1,input2) {
+        const get = greaterLesser;
+        let number = 0;
+        if (get === 'greater') {
+            if (input1 > input2) {
+            number = input1;
+            }
+            else {
+            number = input2
+            }
+        }
+        else {
+            if (input1 < input2) {
+            number = input1;
+            }
+            else {
+            number = input2
+            }
+        }
+    return number 
     }
 
 class OBsmallMath {
@@ -116,6 +139,40 @@ class OBsmallMath {
                 }
             }
         },
+        {
+            opcode: 'compareGet',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'get [greaterLesser] of: [input1] & [input2]',
+            arguments: {
+                input1: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '1'
+                },
+                input2: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '2'
+                },
+                greaterLesser: {
+                    type: Scratch.ArgumentType.STRING,
+                    menu: "greaterLesser"
+                }
+            }
+        },
+        {
+            opcode: 'getDistance',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'Distance between: [input1] & [input2]',
+            arguments: {
+                input1: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '2'
+                },
+                input2: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '6'
+                }
+            }
+        },
       ],
       menus: {
         math: {
@@ -136,6 +193,13 @@ class OBsmallMath {
 				{text: '===', value: '==='},
 				{text: '>=', value: '>='},
 				{text: '<=', value: '<='}
+            ]
+        },
+        greaterLesser: {
+            acceptReporters: true,
+            items: [
+                {text: 'greater', value: 'greater'},
+                {text: 'lesser', value: 'lesser'}
             ]
         }
       }
@@ -159,6 +223,26 @@ class OBsmallMath {
         let number = offCompare(input, type, args.input3);
         return number
     }
+
+    compareGet(args) {
+    return offCompareGet(args.greaterLesser,args.input1,args.input2)
+    }
+
+    getDistance(args) {
+    let lesser = 0;
+    let greater = 1;
+    if (args.input1 < args.input2) {
+        lesser = args.input1;
+        greater = args.input2;
+    }
+    else {
+    lesser = args.input2;
+    greater = args.input1;
+    }
+    let number = greater - lesser;
+    return number
+    }
+        
   
 }
 Scratch.extensions.register(new OBsmallMath());
