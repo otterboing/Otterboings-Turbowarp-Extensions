@@ -5,7 +5,7 @@ A collection of all my Turbowarp extensions! <img width="32" alt="yippee" src="h
 
 It's a bit small right now but the stash will grow bigger!
 
-## ⚠ Warning! ⚠ 
+## <img width="24" alt="⚠" src="https://github.com/user-attachments/assets/a3158421-c817-4fb6-9860-ef997f9a514b" />  Warning! <img width="24" alt="⚠" src="https://github.com/user-attachments/assets/a3158421-c817-4fb6-9860-ef997f9a514b" />
 I don't know what I'm doing!
 
 Updates may break things, always backup your project.
