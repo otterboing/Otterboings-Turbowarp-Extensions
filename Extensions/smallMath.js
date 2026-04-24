@@ -67,6 +67,27 @@
     return number 
     }
 
+    function getDistanceOff(input1, input2) {
+    let lesser = 0;
+    let greater = 1;
+    if (input1 < input2) {
+        lesser = input1;
+        greater = input2;
+    }
+    else {
+    lesser = input2;
+    greater = input1;
+    }
+    let number = greater - lesser;
+    return number
+    }
+
+    function offZWithinXY(z,x,y) {
+    const greater = offCompareGet("greater",x,y);
+    const lesser = offCompareGet("lesser",x,y);
+    return z >= lesser && z <= greater;
+    }
+
 class OBsmallMath {
   getInfo() {
     return {
@@ -142,7 +163,7 @@ class OBsmallMath {
         {
             opcode: 'compareGet',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'get [greaterLesser] of: [input1] & [input2]',
+            text: '[greaterLesser] of: [input1] & [input2]',
             arguments: {
                 input1: {
                     type: Scratch.ArgumentType.STRING,
@@ -161,7 +182,7 @@ class OBsmallMath {
         {
             opcode: 'getDistance',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'Distance between: [input1] & [input2]',
+            text: 'D: [input1] & [input2]',
             arguments: {
                 input1: {
                     type: Scratch.ArgumentType.STRING,
@@ -173,6 +194,79 @@ class OBsmallMath {
                 }
             }
         },
+        {
+            opcode: 'getDistanceXY',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'D: X1: [X1] Y1: [Y1] & X2: [X2] Y2: [Y2]',
+            arguments: {
+                 X1: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '0'
+                },
+                 Y1: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '0'
+                },
+                 X2: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '4'
+                },
+                 Y2: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '4'
+                }
+            }
+        },
+        {
+            opcode: 'ZwithinXY',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: '[z] within [x] & [y]',
+            arguments: {
+                z: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '0'
+                },
+                x: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '-1'
+                },
+                y: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '1'
+                }
+            }
+        },
+        {
+            opcode: 'XYwithinABCD',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: '[x] [y] within [a] [b] & [c] [d]',
+            arguments: {
+                x: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '0'
+                },
+                y: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '0'
+                },
+                a: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '-1'
+                },
+                b: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '1'
+                },
+                c: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '1'
+                },
+                d: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '-1'
+                }
+            }
+        }
       ],
       menus: {
         math: {
@@ -198,8 +292,8 @@ class OBsmallMath {
         greaterLesser: {
             acceptReporters: true,
             items: [
-                {text: 'greater', value: 'greater'},
-                {text: 'lesser', value: 'lesser'}
+                {text: '>', value: 'greater'},
+                {text: '<', value: 'lesser'}
             ]
         }
       }
@@ -229,20 +323,24 @@ class OBsmallMath {
     }
 
     getDistance(args) {
-    let lesser = 0;
-    let greater = 1;
-    if (args.input1 < args.input2) {
-        lesser = args.input1;
-        greater = args.input2;
+    return getDistanceOff(args.input1, args.input2)
     }
-    else {
-    lesser = args.input2;
-    greater = args.input1;
+
+    // I've learned that ^ in js is ** from More-Motion by NexusKitten
+    // https://github.com/TurboWarp/extensions/blob/master/extensions/NexusKitten/moremotion.js
+    // https://github.com/NexusKitten
+    getDistanceXY(args) {
+    //  // Shoutout to Pythagoras & NexusKitten!
+      return Math.sqrt((args.X2 - args.X1) ** 2 + (args.Y2 - args.Y1) ** 2);
     }
-    let number = greater - lesser;
-    return number
+    
+    ZwithinXY(args) {
+    return offZWithinXY(args.z,args.x,args.y);
     }
-        
+
+    XYwithinABCD(args) {
+        return offZWithinXY(args.x,args.a,args.c) && offZWithinXY(args.y,args.b,args.d);
+    }
   
 }
 Scratch.extensions.register(new OBsmallMath());
