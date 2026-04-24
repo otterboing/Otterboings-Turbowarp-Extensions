@@ -9,3 +9,7 @@ It's a bit small right now but the stash will grow bigger!
 I don't know what I'm doing!
 
 Updates may break things, always backup your project.
+
+# Glossary
+
+### Small-Math
