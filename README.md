@@ -1,16 +1,18 @@
 # Extensions <img width="32"  src="https://github.com/user-attachments/assets/976dd807-e863-4b72-9e6d-4c99b9b5dceb" />
 
 
-A collection of all my Turbowarp extensions! <img width="32" alt="yippee" src="https://github.com/user-attachments/assets/15f78142-f44b-4047-9cda-55233a652b1f" />
+A collection of all my Turbowarp extensions! <a href="https://otterboing.neocities.org/extensions" target="_blank"><img width="32" alt="yippee" src="https://github.com/user-attachments/assets/15f78142-f44b-4047-9cda-55233a652b1f" /></a>
 
 It's a bit small right now but the stash will grow bigger!
 
 ## <img width="24" alt="⚠" src="https://github.com/user-attachments/assets/a3158421-c817-4fb6-9860-ef997f9a514b" />  Warning! <img width="24" alt="⚠" src="https://github.com/user-attachments/assets/a3158421-c817-4fb6-9860-ef997f9a514b" />
 I don't know what I'm doing!
 
-Updates may break things, always backup your project.
+**Updates may break things, always backup your project.**
+
 
 ---
+
 
 # Glossary
 
@@ -42,5 +44,32 @@ Allows for setting the mouse cursor to any of the built in cursors in the browse
 - Set Cursor to: `Set cursor to: [every browser cursor; I ain't writing all that]`
 - Set cursor from URL: `Set cursor from URL: [url]`
 - Cursor: `Returns the currentCursor`
+
+### Colorful Comments!
+[Colorful Comments!](https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/Colorful%20Comments!.js)
+
+A colorful way to keep your project orginized! 
+
+#### Blocks:
+- Hat `[comment]`
+- Command `[comment]`
+- Conditional `[comment]`
+- Reporter `[comment] ⇠// [input]`
+- Boolean `[comment] ⇠// [input]`
+
+---
+---
+---
+
+## <img width="24" alt="🚫" src="https://github.com/user-attachments/assets/d6787dae-5c5b-47ad-be7d-df63c2b561c4"/> Anti-AI <img width="24" alt="🚫" src="https://github.com/user-attachments/assets/d6787dae-5c5b-47ad-be7d-df63c2b561c4"/>
+These extensions and all associaded files are made by me(Otterboing) or other **real** human beings.
+
+NO AI was knowingly used in the creation of these extensions.
+
+There has been an a great effort to find and use sources not linked to "AI".
+
+"No part of these files are to be used in the process of training or as the training data for Nerual Networks or LLMs (Large Language Models)"
+
+See [NoBots.md](https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/NoBots.md) for more details.
 
 ---
