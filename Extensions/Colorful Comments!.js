@@ -1,7 +1,6 @@
 // MIT Licence
 // Inspired by the comments extensions by LilyMakesThings https://extensions.turbowarp.org/Lily/CommentBlocks.js
 // LilyMakesThings: https://scratch.mit.edu/users/LilyMakesThings/ https://github.com/LilyMakesThings
-// https://github.com/otterboing/Turbowarp-Extensions/blob/mai\nExtensions/smallMath.js
 // Written by https://github.com/otterboing
 // Original Page: https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/Colorful%20Comments!.js
 
