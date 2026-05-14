@@ -16,6 +16,15 @@ I don't know what I'm doing!
 
 # Glossary
 
+#### Contents
+- [Small-Math](#small-math)
+- [Cursors-Extended](#cursors-extended)
+- [Colorful Comments!](#colorful-comments)
+
+---
+
+
+
 ### Small-Math
 [smallMath](https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/smallMath.js)
 
@@ -45,7 +54,7 @@ Allows for setting the mouse cursor to any of the built in cursors in the browse
 - Set cursor from URL: `Set cursor from URL: [url]`
 - Cursor: `Returns the currentCursor`
 
-### Colorful Comments!
+### Colorful-Comments!
 [Colorful Comments!](https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/Colorful%20Comments!.js)
 
 A colorful way to keep your project orginized! 
