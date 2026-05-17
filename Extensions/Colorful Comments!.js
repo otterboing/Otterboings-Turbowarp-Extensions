@@ -33,6 +33,11 @@ class OBColorfulComments {
             func: "Credits"
         },
         {
+            blockType: Scratch.BlockType.BUTTON,
+            text: 'Extra',
+            func: "ExtraButton"
+        },
+        {
             opcode: 'noteHat',
             blockType: Scratch.BlockType.HAT,
             text: '// [comment]',
@@ -49,7 +54,7 @@ class OBColorfulComments {
         {
             opcode: 'noteCommand',
             blockType: Scratch.BlockType.COMMAND,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: note,
             color3: note2,
             arguments: {
@@ -62,7 +67,7 @@ class OBColorfulComments {
         {
             opcode: 'noteConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
-            text: '// [comment] 🐈',
+            text: '//_ [comment] 🐈',
             color1: note,
             color3: note2,
             arguments: {
@@ -76,7 +81,7 @@ class OBColorfulComments {
             opcode: 'noteReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: note,
             color3: note2,
             arguments: {
@@ -94,7 +99,7 @@ class OBColorfulComments {
             opcode: 'noteBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: note,
             color3: note2,
             arguments: {
@@ -124,7 +129,7 @@ class OBColorfulComments {
         {
             opcode: 'greyCommand',
             blockType: Scratch.BlockType.COMMAND,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: grey,
             color3: grey2,
             arguments: {
@@ -137,7 +142,7 @@ class OBColorfulComments {
         {
             opcode: 'greyConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: grey,
             color3: grey2,
             arguments: {
@@ -151,7 +156,7 @@ class OBColorfulComments {
             opcode: 'greyReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: grey,
             color3: grey2,
             arguments: {
@@ -169,7 +174,7 @@ class OBColorfulComments {
             opcode: 'greyBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: grey,
             color3: grey2,
             arguments: {
@@ -201,7 +206,7 @@ class OBColorfulComments {
             opcode: 'redCommand',
             blockType: Scratch.BlockType.COMMAND,
             allowDropAnywhere: true,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: '#FF263B',
             color2: '#ac1a29',
             color3: '#80131e',
@@ -216,7 +221,7 @@ class OBColorfulComments {
             opcode: 'redConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
             allowDropAnywhere: true,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: '#FF263B',
             color2: '#ac1a29',
             color3: '#80131e',
@@ -231,7 +236,7 @@ class OBColorfulComments {
             opcode: 'redReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: '#FF263B',
             color2: '#ac1a29',
             color3: '#80131e',
@@ -250,7 +255,7 @@ class OBColorfulComments {
             opcode: 'redBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: '#FF263B',
             color2: '#ac1a29',
             color3: '#80131e',
@@ -282,7 +287,7 @@ class OBColorfulComments {
             opcode: 'blueCommand',
             blockType: Scratch.BlockType.COMMAND,
             allowDropAnywhere: true,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: blue,
             color3: blue2,
             arguments: {
@@ -296,7 +301,7 @@ class OBColorfulComments {
             opcode: 'blueConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
             allowDropAnywhere: true,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: blue,
             color3: blue2,
             arguments: {
@@ -310,7 +315,7 @@ class OBColorfulComments {
             opcode: 'blueReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: blue,
             color3: blue2,
             arguments: {
@@ -328,7 +333,7 @@ class OBColorfulComments {
             opcode: 'blueBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: blue,
             color3: blue2,
             arguments: {
@@ -358,7 +363,7 @@ class OBColorfulComments {
         {
             opcode: 'orangeCommand',
             blockType: Scratch.BlockType.COMMAND,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: orange,
             color3: orange2,
             arguments: {
@@ -371,7 +376,7 @@ class OBColorfulComments {
         {
             opcode: 'orangeConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: orange,
             color3: orange2,
             arguments: {
@@ -385,7 +390,7 @@ class OBColorfulComments {
             opcode: 'orangeReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: orange,
             color3: orange2,
             arguments: {
@@ -403,7 +408,7 @@ class OBColorfulComments {
             opcode: 'orangeBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: orange,
             color3: orange2,
             arguments: {
@@ -433,7 +438,7 @@ class OBColorfulComments {
         {
             opcode: 'yellowCommand',
             blockType: Scratch.BlockType.COMMAND,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: yellow,
             color3: yellow2,
             arguments: {
@@ -446,7 +451,7 @@ class OBColorfulComments {
         {
             opcode: 'yellowConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: yellow,
             color3: yellow2,
             arguments: {
@@ -460,7 +465,7 @@ class OBColorfulComments {
             opcode: 'yellowReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: yellow,
             color3: yellow2,
             arguments: {
@@ -478,7 +483,7 @@ class OBColorfulComments {
             opcode: 'yellowBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: yellow,
             color3: yellow2,
             arguments: {
@@ -508,7 +513,7 @@ class OBColorfulComments {
         {
             opcode: 'purpleCommand',
             blockType: Scratch.BlockType.COMMAND,
-            text: '// [comment]',
+            text: '//` [comment]',
             color1: purple,
             color3: purple2,
             arguments: {
@@ -521,7 +526,7 @@ class OBColorfulComments {
         {
             opcode: 'purpleConditional',
             blockType: Scratch.BlockType.CONDITIONAL,
-            text: '// [comment]',
+            text: '//_ [comment]',
             color1: purple,
             color3: purple2,
             arguments: {
@@ -535,7 +540,7 @@ class OBColorfulComments {
             opcode: 'purpleReporter',
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: purple,
             color3: purple2,
             arguments: {
@@ -553,7 +558,7 @@ class OBColorfulComments {
             opcode: 'purpleBoolean',
             blockType: Scratch.BlockType.BOOLEAN,
             allowDropAnywhere: true,
-            text: '[comment] ⇠// [input]',
+            text: '[comment] ⇠ // [input]',
             color1: purple,
             color3: purple2,
             arguments: {
@@ -700,6 +705,10 @@ class OBColorfulComments {
 
     Credits() {
     alert("Inspired by LilyMakesThings \n https://extensions.turbowarp.org/Lily/CommentBlocks.js \n https://github.com/LilyMakesThings \n https://scratch.mit.edu/users/LilyMakesThings/");
+    }
+
+    ExtraButton() {
+    alert("You can search //_ or //` to get the command or long container thing blocks. (:");
     }
   
 }
