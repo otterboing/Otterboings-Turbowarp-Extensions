@@ -13,10 +13,21 @@ I don't know what I'm doing!
 
 ---
 
+## Sandboxed Extensions
+
+Extensions run with the Sandbox enabled will be much slower or may not work at all!
+
+<sub>Additionally any buttons probably won't work.</sub>
+
+#### Un-sandboxed extensions:
+
+- [Cursors-Extended ![](Extra%20Files/UnSandboxed!.png)](Extensions/Cursors-Extended.js) - Requires JS to change the Scratch Canvas's CSS.
+
 
 # Glossary
 
 #### Contents
+
 - [Small-Math](#small-math)
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
@@ -24,13 +35,13 @@ I don't know what I'm doing!
 ---
 
 
-
 ### Small-Math
 [smallMath](Extensions/smallMath.js)
 
-Math blocks minified to hopefully be smaller _(in the block editor not code)_ than other extensions.
+Math blocks minified to hopefully be smaller than other extensions. _(in the block editor not code)_
 
 It's also got some blocks for checking distances and collisions.
+
 
 #### Blocks:
 - Math: `[input1] [+,-,*,/] [input2]`
@@ -57,7 +68,7 @@ Allows for setting the mouse cursor to any of the built in cursors in the browse
 ### Colorful-Comments!
 [Colorful Comments!](Extensions/Colorful%20Comments!.js)
 
-A colorful way to keep your project orginized! 
+A colorful way to keep your project organized! 
 
 #### Blocks:
 - Hat `[comment]`
@@ -71,13 +82,13 @@ A colorful way to keep your project orginized!
 ---
 
 ## <img width="24" alt="🚫" src="Extra%20Files/X.png"/> Anti-AI <img width="24" alt="🚫" src="Extra%20Files/X.png"/>
-These extensions and all associaded files are made by me(Otterboing) or other **real** human beings.
+These extensions and all associated files are made by me(Otterboing) or other **real** human beings.
 
 NO AI was knowingly used in the creation of these extensions.
 
 There has been an a great effort to find and use sources not linked to "AI".
 
-"No part of these files are to be used in the process of training or as the training data for Nerual Networks or LLMs (Large Language Models)"
+"No part of these files are to be used in the process of training or as the training data for Neural Networks or LLMs (Large Language Models)"
 
 See [NoBots.md](NoBots.md) for more details.
 

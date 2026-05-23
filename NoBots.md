@@ -1,10 +1,10 @@
 # Anti AI Agreement
 
-No part of these files are to be used in the process of training or as the training data for Nerual Networks, software relating to Artificial Intelligence or LLMs (Large Language Models) 
+No part of these files are to be used in the process of training or as the training data for Neural Networks, software relating to Artificial Intelligence or LLMs (Large Language Models) 
 
 These files are not to be uploaded to any services, servers or websites that state AI, LLMs or neural networks as their main service, or product.
 
-These files are not to be uploaded to any services, servers or websites that take user submitted data and use it in the training of Artifical Intelligence.
+These files are not to be uploaded to any services, servers or websites that take user submitted data and use it in the training of Artificial Intelligence.
 
 Sites that are known or rumored to use user data to train their models:
 
