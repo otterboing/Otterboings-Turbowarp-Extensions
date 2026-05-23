@@ -1,11 +1,13 @@
 // MIT Licence 
 // Original by https://github.com/otterboing
 // https://github.com/otterboing/Turbowarp-Extensions/blob/main/Extensions/Cursors-Extended.js
+
 (function (Scratch) {
 
 "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("'OBextendedCursors' Must Be Run Un-Sandboxed! - Requires JS to Set The Scratch Canvas's CSS");
 
+const icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABmZVhJZklJKgAIAAAAAQBphwQAAQAAABoAAAAAAAAAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAEQAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAAIvvHMbnUA7gAAAEGSURBVFhH7c3hDoMwCARg3/+lNw+Pikhdadl+7UsuMRTOLfBiVmnPcJ8/sMmKOpAuWYjom8kIXp8wY0Jce4Y9lx5enDBjbuQhS+968YKdRgYrZjp403A8B/fZDt40HM/BfbaDN026wJq5580Fn/Jw6+NFO3suuDoH9zaef99zIw8Voh7bz++QLKyKejDTOb9DsrAKPb2Y91Bb+hb9B37Ww9V66GYecb0WepmPZLGSdqJ8FE9roI8ZxtM66GSGyHI19g7jWR10HtVjeFYHnUf1GDmoon0ozuD5GvQwaax4hr3err7tmdItVroT7Zr5Etbd4Y1RdubfpkmRp3Ms/IL9oc3fom17A/33WRiMzhETAAAAAElFTkSuQmCC";
 const canvas = document.querySelector('canvas');
 let currentCursor = 'default'
 
@@ -14,6 +16,7 @@ class OBextendedCursors {
     return {
       id: 'OBextendedCursors',
       name: 'Extended Cursors',
+      menuIconURI: icon,
       blocks: [
         {
             blockType: Scratch.BlockType.BUTTON,
@@ -53,10 +56,11 @@ class OBextendedCursors {
           }
         },
         {
+          // Working on it (:
           opcode: 'setCursorFromUrlWithScale',
           blockType: Scratch.BlockType.COMMAND,
           text: 'Set cursor from URL: [url] scale to width: [width] px height: [height] px, offset by X: [offsetX] Y: [offsetY]',
-		  hideFromPalette: true,
+		      hideFromPalette: true,
           arguments: {
 
            url: {
@@ -82,11 +86,12 @@ class OBextendedCursors {
 
           }
         },
+        //
         {
             opcode: 'getCursor',
             blockType: Scratch.BlockType.REPORTER,
             text: 'Cursor'
-        },
+        }
       ],
       menus: {
         cursors: {
@@ -137,7 +142,7 @@ class OBextendedCursors {
 
   setCursorFromUrl(args) {
     canvas.style.cursor = "url('"+args.url+"') "+args.offsetX+" "+args.offsetY+", default";
-    currentCursor = args.url;
+    currentCursor = '{"cursor":"'+args.url+'","offsetX":'+args.offsetX+',"offsetY":'+args.offsetY+'}';
   };
   
   setCursorFromUrlWithScale(args) {
@@ -158,7 +163,7 @@ class OBextendedCursors {
   };
 
   setCursor(args) {
-    canvas.style.cursor = ""+args.CURSOR+"";
+    canvas.style.cursor = args.CURSOR;
     currentCursor = args.CURSOR;
   };
 
@@ -166,9 +171,8 @@ class OBextendedCursors {
     return currentCursor
   }
 
-
   Notice() {
-    alert("Loading a cursor from an image url will use it's full resolution. For example: 256x256px will be MASSIVE! I have plans to implement built in resizing but for now you have to maunally resize or use Sharkpools Image extension. 🤗 Sharkpool's extension:  https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js ");
+    alert(`Loading a cursor from an image url will use it's full resolution. \nFor example: 256x256px will be MASSIVE! \nI have plans to implement built in resizing but for now you have to maunally resize or use Sharkpools Image extension. 🤗 \n\nSharkpool's extension: \n https://sharkpools-extensions.vercel.app/extension-code/Image-Editor.js \n \n Note: \n Loading from URL will set the cursor block to json formatted like so: \n { \n "cursor":"url",\n"offsetX":offsetX,\n"offsetY":offsetY\n}`);
   }
   
 }
