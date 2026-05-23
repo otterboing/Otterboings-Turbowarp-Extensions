@@ -3,6 +3,9 @@
 // https://github.com/otterboing/Turbowarp-Extensions/blob/main/Extensions/Cursors-Extended.js
 (function (Scratch) {
 
+"use strict";
+  if (!Scratch.extensions.unsandboxed) throw new Error("'OBextendedCursors' Must Be Run Un-Sandboxed! - Requires JS to Set The Scratch Canvas's CSS");
+
 const canvas = document.querySelector('canvas');
 let currentCursor = 'default'
 
