@@ -2,6 +2,8 @@
 // Original by https://github.com/otterboing
 // https://github.com/otterboing/Turbowarp-Extensions/blob/main/Extensions/Cursors-Extended.js
 
+// Inspired by the original cursor.js extension : https://extensions.turbowarp.org/cursor.js
+
 (function (Scratch) {
 
 "use strict";
@@ -15,7 +17,7 @@ class OBextendedCursors {
   getInfo() {
     return {
       id: 'OBextendedCursors',
-      name: 'Extended Cursors',
+      name: 'Cursors Extended',
       menuIconURI: icon,
       blocks: [
         {
