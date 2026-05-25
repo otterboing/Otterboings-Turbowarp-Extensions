@@ -1,7 +1,7 @@
-# Extensions <img width="32"  src="https://github.com/user-attachments/assets/976dd807-e863-4b72-9e6d-4c99b9b5dceb" />
+# Extensions <img width="32"  src="Extra%20Files/guy.png" />
 
 
-A collection of all my Turbowarp extensions! <a href="https://otterboing.neocities.org/extensions" target="_blank"><img width="32" alt="yippee" src="https://github.com/user-attachments/assets/15f78142-f44b-4047-9cda-55233a652b1f" /></a>
+A collection of all my Turbowarp extensions! <a href="https://otterboing.neocities.org/extensions" target="_blank"><img width="32" title="yippee" src="Extra%20Files/guy2.png" /></a>
 
 It's a bit small right now but the stash will grow bigger!
 
@@ -22,6 +22,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 #### Un-sandboxed extensions:
 
 - [Cursors-Extended ![](Extra%20Files/UnSandboxed!.png)](Extensions/Cursors-Extended.js) - Requires JS to change the Scratch Canvas's CSS.
+- [Inline Variables ![](Extra%20Files/UnSandboxed!.png)](Extensions/InlineVariables.js) - Requires JS to manage the variables.
 
 
 # Glossary
@@ -31,6 +32,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Small-Math](#small-math)
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
+- [Inline Variables](#inline-variables) <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png"> <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">
 
 ---
 
@@ -73,9 +75,21 @@ A colorful way to keep your project organized!
 #### Blocks:
 - Hat `[comment]`
 - Command `[comment]`
-- Conditional `[comment]`
+- Conditional `//_ [comment]`
 - Reporter `[comment] ⇠// [input]`
 - Boolean `[comment] ⇠// [input]`
+
+### Inline Variables
+[Inline Variables](Extensions/InlineVariables.js)
+
+Reference variables in a string and replace them with their value!
+
+>Basically a less intrusive join block.
+
+#### Blocks:
+- Set var: `Set var:[variableName] to:[value]`
+- Var: `Var:[variableName]` "Returns the value."
+- : `[string]` "Searches the input for references to any variables and replaces them with their values."
 
 ---
 ---
