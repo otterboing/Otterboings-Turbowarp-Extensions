@@ -32,7 +32,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Small-Math](#small-math)
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
-- [Inline Variables](#inline-variables) <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png"> <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">
+- [Inline Variables <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png"><img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
 
 ---
 
