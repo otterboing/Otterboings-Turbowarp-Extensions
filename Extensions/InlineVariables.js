@@ -19,19 +19,19 @@ class OBInlineVariables {
   // Mostly Copied from Temporary Variables
   constructor() {
       
-      if (!this.runtimeVariables) {
-      this.runtimeVariables = Object.create(null);
+      if (!this.globalVariables) {
+      this.globalVariables = Object.create(null);
       }
       if (!this.spriteVariables) {
       this.spriteVariables = Object.create(null);
       }
       Scratch.vm.runtime.on("PROJECT_START", () => {
-        this.resetRuntimeVariables();
+        this.resetglobalVariables();
         this.resetSpriteVariables();
       });
 
       Scratch.vm.runtime.on("PROJECT_STOP_ALL", () => {
-        this.resetRuntimeVariables();
+        this.resetglobalVariables();
         this.resetSpriteVariables();
       });
     }
@@ -267,10 +267,10 @@ class OBInlineVariables {
     }
     this.spriteVariables[sprite][args.VAR] = args.input;
   } else if (args.type === 1) {
-    if (!this.runtimeVariables) {
-      this.runtimeVariables = Object.create(null);
+    if (!this.globalVariables) {
+      this.globalVariables = Object.create(null);
     }
-    this.runtimeVariables[args.VAR] = args.input;
+    this.globalVariables[args.VAR] = args.input;
   } else {
     const thread = util.thread;
     if (!thread.variables) {
@@ -280,25 +280,25 @@ class OBInlineVariables {
   }
   }
 
-  // Copied from above, but it just sets it to an empty sting instead /:
+  // Copied from above, but it deletes it instead /:
   deleteSharedVar(args, util) {
   if (args.type === 0) {
     const sprite = util.target.getName();
     if (!this.spriteVariables[sprite]) {
       this.spriteVariables[sprite] = Object.create(null);
     }
-    this.spriteVariables[sprite][args.VAR] = '';
+    delete this.spriteVariables[sprite][args.VAR];
   } else if (args.type === 1) {
-    if (!this.runtimeVariables) {
-      this.runtimeVariables = Object.create(null);
+    if (!this.globalVariables) {
+      this.globalVariables = Object.create(null);
     }
-    this.runtimeVariables[args.VAR] = '';
+    delete this.globalVariables[args.VAR];
   } else {
     const thread = util.thread;
     if (!thread.variables) {
         thread.variables = Object.create(null);
     }
-    thread.variables[args.VAR] = '';
+    delete thread.variables[args.VAR];
   }
   }
 
@@ -311,10 +311,10 @@ class OBInlineVariables {
     const spriteVars = this.spriteVariables[sprite];
     return spriteVars[args.VAR];
     } else if (args.type === 1) {
-      if (!this.runtimeVariables) {
-        this.runtimeVariables = Object.create(null);
+      if (!this.globalVariables) {
+        this.globalVariables = Object.create(null);
       }
-    return this.runtimeVariables[args.VAR];
+    return this.globalVariables[args.VAR];
     } else {
     const thread = util.thread;
     if (!thread.variables) {
@@ -327,7 +327,7 @@ class OBInlineVariables {
   getSharedString(args, util) {
     const thread = util.thread;
     const spriteName = util.target.getName();
-    const runtime = this.runtimeVariables;
+    const runtime = this.globalVariables;
     if (!thread.variables) {
         thread.variables = Object.create(null);
     }
@@ -336,8 +336,8 @@ class OBInlineVariables {
     }
     const sprite = this.spriteVariables[spriteName];
     
-    if (!this.runtimeVariables) {
-        this.runtimeVariables = Object.create(null);
+    if (!this.globalVariables) {
+        this.globalVariables = Object.create(null);
       }
     const threadKeys = Object.keys(thread.variables);
     const threadValues = Object.values(thread.variables);
@@ -372,10 +372,10 @@ class OBInlineVariables {
     }
     } else if (args.type === 1) {
       // Global
-      if (!this.runtimeVariables) {
-        this.runtimeVariables = Object.create(null);
+      if (!this.globalVariables) {
+        this.globalVariables = Object.create(null);
       }
-      const runtime = this.runtimeVariables;
+      const runtime = this.globalVariables;
       if (args.outType === 1) {
       return Object.keys(runtime);
       } else {
@@ -400,15 +400,15 @@ class OBInlineVariables {
   }
 
   Info() {
-    alert(`- This extension can work on it's own or with the Temporary Variables Extension: \n -- You can set a variable in either extension and it will still work in both. \n \n - Variables are Case Sensitive!\n\nMake Sure you name your variables in non-conflicting ways: \nVariables are replaced in the order they're added! e.g:\n\n - set var:"{var}" to "World!"\n - set var:"World!" to "Myself!" \n - get "Hello {var}" \n - will return: "Hello Myself!"\nOr:\n - set var:"a" to:"~STOP~" \n - set var:"{var}" to:"World!"\n - get "Hello {var}"\n - will return: "Hello {v~STOP~r}"`)
+    alert(`- This extension can work on it's own or with the Temporary Variables Extension: \n -- You can set a THREAD(Not Global or Sprite) variable in either extension and it will still work in both. \n \n - Variables are Case Sensitive!\n\nMake Sure you name your variables in non-conflicting ways: \nVariables are replaced in the order they're added! e.g:\n\n - set var:"{var}" to "World!"\n - set var:"World!" to "Myself!" \n - get "Hello {var}" \n - will return: "Hello Myself!"\nOr:\n - set var:"a" to:"~STOP~" \n - set var:"{var}" to:"World!"\n - get "Hello {var}"\n - will return: "Hello {v~STOP~r}"`)
   }
 
   shareInfo() {
-    alert(`- The shared string will get all variables in this order:\n\n  thread, sprite then runtime\n\n- If a certain var doesn't exist it will not replace it in the string!\n\n- Also Global Variables are runtime variables, I just renamed them so they don't conflict when searching blocks!`)
+    alert(`- The shared string will get all variables in this order:\n\n  thread, sprite then runtime\n\n- If a certain var doesn't exist it will not replace it in the string!\n\n-  Global Variables do not work with runtime variables from TempVars`)
   }
 
-  resetRuntimeVariables() {
-    this.runtimeVariables = Object.create(null);
+  resetglobalVariables() {
+    this.globalVariables = Object.create(null);
   }
 
   resetSpriteVariables() {

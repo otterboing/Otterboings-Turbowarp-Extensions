@@ -5,6 +5,9 @@ A collection of all my Turbowarp extensions! <a href="https://otterboing.neociti
 
 It's a bit small right now but the stash will grow bigger!
 
+# Docs
+[Documentation](Docs/Docs.md)
+
 ## <img width="24" alt="⚠" src="Extra%20Files/Warning.png" />  Warning! <img width="24" alt="⚠" src="Extra%20Files/Warning.png" />
 I don't know what I'm doing!
 
@@ -32,7 +35,8 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Small-Math](#small-math)
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
-- [Inline Variables <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png"><img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
+- [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
+- [Extra Array <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](Extensions/extraArray.js)
 
 ---
 
@@ -63,9 +67,9 @@ An alternative to the [Mouse Cursors Extension](https://github.com/TurboWarp/ext
 Allows for setting the mouse cursor to any of the built in cursors in the browser or from a URL.
 
 #### Blocks:
-- Set Cursor to: `Set cursor to: [every browser cursor; I ain't writing all that]`
-- Set cursor from URL: `Set cursor from URL: [url]`
-- Cursor: `Returns the currentCursor`
+- Set Cursor to: `Set cursor to: [every browser cursor; I ain't writing all that]` "Sets the cursor style of `Scratch.renderer.canvas` to a certain cursor."
+- Set cursor from URL: `Set cursor from URL: [url]` "Sets the cursor style of `Scratch.renderer.canvas` to an image fetched from a url."
+- Cursor: `Returns the currentCursor` "👈."
 
 ### Colorful-Comments!
 [Colorful Comments!](Extensions/Colorful%20Comments!.js)
@@ -90,6 +94,18 @@ Reference variables in a string and replace them with their value!
 - Set var: `Set var:[variableName] to:[value]`
 - Var: `Var:[variableName]` "Returns the value."
 - : `[string]` "Searches the input for references to any variables and replaces them with their values."
+
+### Extra Array <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">
+[Extra Array](Extensions/extraArray.js)
+
+Some Misc Tools For Handling Arrays!
+
+#### Blocks:
+- Search Array: `Search [array] for [query]` "Searches an array for a certain query!"
+- Contains Only?: `[array] contains only [query]?` "Checks if and array only contains a certain query."
+- Insert Every: `Insert [input] every [number] items in [array]` "Inserts an item every `number` of items in an array."
+- Count Occurrences: `# of [query] in [array]` "Return the number of occurrences of a certain query in an array."
+- Pop: `Pop: [array]` "Removes the last item in an array Or the last character of a string."
 
 ---
 ---
