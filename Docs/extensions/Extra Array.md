@@ -10,7 +10,7 @@ Just to add stuff as I need it really...
 - [Contains Only?](#contains-only)
 - [Insert Every](#insert-every)
 - [Count Occurrences](#count-occurrences)
-- [#Pop]()
+- [Pop](#pop)
 # Blocks
 
 #### Search Array
