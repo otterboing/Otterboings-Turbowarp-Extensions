@@ -1,5 +1,5 @@
 # Colorful Comments
----
+
 ### Description
 A colorful way to organize your projects!
 #### Plans:
@@ -7,13 +7,13 @@ A colorful way to organize your projects!
 - Long Term: A way for user's to add their own colors.
 
 # Contents
----
+
 - [Reporters](#reporters)
 - [Booleans](#booleans)
 - [Blocks that do nothing](#blocks-that-do-nothing)
 
 # Blocks
----
+
 
 #### Reporters
 Includes a string input and a comment input. The block returns the string input.

@@ -1,12 +1,10 @@
 # Inline Variables
----
 ### Description
 Inline Variables allows you to define variables and reference them in a string.
 #### Plans:
 I hope to add the ability to set variables within the string at some point, as well as do some math operations.
 
 # Contents
----
 
 ##### Sharing
 - [#Set Variable]()
@@ -28,7 +26,6 @@ I hope to add the ability to set variables within the string at some point, as w
 - **Thread:** Available to the Thread it was defined in. Works with [TempVars](https://extensions.turbowarp.org/Lily/TempVariables2.js) by [LilyMakesThings](https://scratch.mit.edu/users/LilyMakesThings/)!
 
 # Blocks
----
 #### Set Variable:
 Defines a `global`, `sprite` or `thread` [#Variables|variable].
 
