@@ -1,3 +1,3 @@
-- [Colorful Comments]()
-- [Inline Variables]()
-- [Extra Array]()
+- [Colorful Comments](extensions/Colorful%20Comments.md)
+- [Inline Variables](extensions/Inline%20Variables.md)
+- [Extra Array](extensions/Extra%20Array.md)
