@@ -9,15 +9,16 @@ I hope to add the ability to set variables within the string at some point, as w
 ---
 
 ##### Sharing
-- [[#Set Variable]]
-- [[#Delete Variable]]
-- [[#Get Variable]]
-- [[#Get String]]
+- [#Set Variable]()
+- [#Delete Variable]()
+- [#Get Variable]()
+- [#Get String]()
+
 ##### Legacy
 
-- [[#Set Thread Variable]]
-- [[#Get Thread Variable]]
-- [[#Get Thread String]]
+- [#Set Thread Variable]()
+- [#Get Thread Variable]()
+- [#Get Thread String]()
 
 ---
 ## Variables
@@ -29,25 +30,25 @@ I hope to add the ability to set variables within the string at some point, as w
 # Blocks
 ---
 #### Set Variable:
-Defines a `global`, `sprite` or `thread` [[#Variables|variable]].
+Defines a `global`, `sprite` or `thread` [#Variables|variable].
 
 `Command`
 
-![[setVar.svg]]
+<img alt='Set "["global","sprite","thread"]" var: "{var}" to: "World!"' src="Images/inlineVariables/setVar.svg">
 
 #### Delete Variable
-Deletes the requested `global`, `sprite` or `thread` [[#Variables|variable]].
+Deletes the requested `global`, `sprite` or `thread` [#Variables|variable].
 
 `Command`
 
-![[deleteVar.svg]]
+<img alt='Delete "["global","sprite","thread"]" var: "{var}"' src="Images/inlineVariables/deleteVar.svg">
 
 #### Get Variable
-Returns the requested `global`, `sprite` or `thread` [[#Variables|variable]].
+Returns the requested `global`, `sprite` or `thread` [#Variables|variable].
 
 `Reporter`
 
-![[getVar.svg]]
+<img alt='"["global","sprite","thread"]" var: "{var}"' src="Images/inlineVariables/getVar.svg">
 
 #### Get String
 Takes an input string and returns it with all referenced variables replaced by their values.
@@ -59,29 +60,30 @@ The string replaces variables in the order they're defined and in groups using t
 
 `Reporter`
 
-![[getString.svg]]
+<img alt=': "Hello {var}"' src="Images/inlineVariables/getString.svg">
 
-### <img src="stringIcon.png" width="20px" style="transform: rotateY(180deg)"> Legacy  <img src="stringIcon.png" width="20px">
+### <img src="Images/inlineVariables/stringIcon.png" width="20px" style="transform: rotateY(180deg)"> Legacy  <img src="Images/inlineVariables/stringIcon.png" width="20px">
+
 These blocks are from the previous version. I've kept them un-hidden cuz they're still kinda useful. 
 I also gave them a unique Icon!
 
 #### Set Thread Variable
-Defines a thread [[#Variables|variable]].
+Defines a thread [#Variables|variable].
 
 `Command`
 
-![[setThreadVar.svg]]
+<img alt='Set var: "{var}" to: "World!"' src="Images/inlineVariables/setThreadVar.svg">
 
 #### Get Thread Variable
-Returns the requested Thread [[#Variables|variable]].
+Returns the requested Thread [#Variables|variable].
 
 `Reporter`
 
-![[getThreadVar.svg]]
+<img alt='Var: "{var}"' src="Images/inlineVariables/getThreadVar.svg">
 
 #### Get Thread String
 Takes an input string and returns it with all referenced Thread variables replaced by their values.
 
 `Reporter`
 
-![[getThreadString.svg]]
+<img alt='| "Hello {var}"' src="Images/inlineVariables/getThreadString.svg">

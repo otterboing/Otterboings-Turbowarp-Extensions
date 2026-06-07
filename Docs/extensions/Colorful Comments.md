@@ -8,9 +8,9 @@ A colorful way to organize your projects!
 
 # Contents
 ---
-- [[#Reporters]]
-- [[#Booleans]]
-- [[#Blocks that do nothing]]
+- [Reporters](#reporters)
+- [Booleans](#booleans)
+- [Blocks that do nothing](#blocks-that-do-nothing)
 
 # Blocks
 ---
@@ -21,7 +21,7 @@ Includes a string input and a comment input. The block returns the string input.
 `Reporter`
 
 #### Booleans
-Includes a boolean input and a comment input. The block returns the boolean input.
+Includes a Boolean input and a comment input. The block returns the Boolean input.
 
 `Boolean`
 
@@ -31,32 +31,40 @@ These blocks do nothing dog...
 - **command**
 - **end**
 
-<img alt="The Hat, Command, Reporters, Booleans, and End blocks." src="allBlocks.svg">
+<img alt="The Hat, Command, Reporters, Booleans, and End blocks." src="Images/Colorful Comments!/allBlocks.svg">
 
 ---
 ## Colors
 There are currently 8 colors:
+
 #### Note 
 
-![[note.svg|113]]
+<img alt='' src="Images/Colorful Comments!/note.svg">
+
 #### Grey
 
-![[grey.svg|278]]
+<img alt='' src="Images/Colorful Comments!/grey.svg">
+
 #### Contrast
 
-![[contrast.svg]]
+<img alt='' src="Images/Colorful Comments!/contrast.svg">
+
 #### Red
 
-![[red.svg]]
+<img alt='' src="Images/Colorful Comments!/red.svg">
+
 #### Orange
 
-![[orange.svg]]
+<img alt='' src="Images/Colorful Comments!/orange.svg">
+
 #### Yellow
 
-![[yellow.svg]]
+<img alt='' src="Images/Colorful Comments!/yellow.svg">
+
 #### Blue
 
-![[blue.svg]]
+<img alt='' src="Images/Colorful Comments!/blue.svg">
+
 #### Purple
 
-![[purple.svg]]
+<img alt='' src="Images/Colorful Comments!/purple.svg">
