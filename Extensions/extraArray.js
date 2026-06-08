@@ -36,6 +36,7 @@ class OBExtraArray {
           opcode: 'searchArray',
           blockType: Scratch.BlockType.REPORTER,
           text: 'Search [json] for:[query]',
+          allowDropAnywhere: true,
           arguments: {
             json: {
               type: Scratch.ArgumentType.STRING,
@@ -51,6 +52,7 @@ class OBExtraArray {
           opcode: 'containsOnly',
           blockType: Scratch.BlockType.BOOLEAN,
           text: '[json] contains only:[query]?',
+          allowDropAnywhere: true,
           arguments: {
             json: {
               type: Scratch.ArgumentType.STRING,
@@ -66,6 +68,7 @@ class OBExtraArray {
           opcode: 'insertEvery',
           blockType: Scratch.BlockType.REPORTER,
           text: 'Insert [input] every [number] items in: [json]',
+          allowDropAnywhere: true,
           arguments: {
             input: {
               type: Scratch.ArgumentType.STRING,
@@ -85,6 +88,7 @@ class OBExtraArray {
           opcode: 'countOccurrences',
           blockType: Scratch.BlockType.REPORTER,
           text: '# of [query] in [json]',
+          allowDropAnywhere: true,
           arguments: {
             query: {
               type: Scratch.ArgumentType.STRING,
@@ -100,6 +104,7 @@ class OBExtraArray {
           opcode: 'popThis',
           blockType: Scratch.BlockType.REPORTER,
           text: 'pop: [json]',
+          allowDropAnywhere: true,
           arguments: {
             json: {
               type: Scratch.ArgumentType.STRING,
