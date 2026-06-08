@@ -3,9 +3,8 @@
 // Based on Temporary Variables by LilyMakesThings <https://scratch.mit.edu/users/LilyMakesThings/> & Mio <https://scratch.mit.edu/users/0znzw/>
 // Works fully with your thread variables in Temporary Variables <https://extensions.turbowarp.org/Lily/TempVariables2.js>
 // Page: https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/InlineVariables.js
-
+try {
 (function (Scratch) {
-
 if (!Scratch.extensions.unsandboxed) throw new Error("'OBInlineVariables' Must Be Run Un-Sandboxed! - Requires JS to manage the variables.");
 
 // Version:
@@ -13,6 +12,8 @@ const ver = '1.2.1'
 
 const icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABmZVhJZklJKgAIAAAAAQBphwQAAQAAABoAAAAAAAAAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAEQAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAAIvvHMbnUA7gAAAL7SURBVHhe7ZMBjuMgEAT3HfeZvOten9thCwubBg/YYMe3JbUimWHobilfr9frnerr4bw3ZAU8uQQyr5AFmLjzGMibUSzAxN2Ph6ySagEmdnws5CyyW4CJXR8HGau4Cohi7+0hm4umAqJ453aQqYnfAlRAj3jzNpCnme4CTLx9OWTp4lABJjxcBjm6OVyACS/TIcMhTinAhKdp4P8wpxVgwttw8H4KvwWoIK3CVxPvv3/eqfjcBBkO0VUA77vZhvWK627I1MTQAlSoHrFuFzI1MawAFeSoWF2ETE1UC7Cl6rspvFhAmT9DrJeQJ6N2ZsiAYWOCZyaijJ8pnskgzwqOFvi8YhWOOUk6V5pXhkeI5xbIsoIjCSMBPu2zV4AyOlI8GyDLCo7OpVaCMjla4V1BMDQCVYBJmZuiAtgdgyrAJA2OVAFsjuWuBWBvPKoAk8fkwmZW7YvazpbA3hyU0Sgv6q5HCmzNQxkz9aD2lFQCW3NRBk09qD1blcDONbiMOv6/RribzO7u/QYb17E1GWWE3yRQDFVFzJfu2HdsXEc0qLQNsxcoULijsO/YuAZ8LKGU0hDZWY1YQIW4BztzwcNCGsyrI2x3YWse+FixNeVRD2oPtuaAjwxlzKMW1P0o7I0FHznxP1v4v2+Vzgd5SObVThM2/bDadZHRjHCWmKuZVHMrKcScvan2m+xsj2WWJxY4lzCygqOAMmqyh9T3qgz1/Vs8F4hBUnEkyWZ/XsphfoHPGRwHlNkR4rnANlAUxwtqxlQM5oHdGcr0GWJ9hgrm1ZACDBXgqFidoYJ5NawAQ4XoEeuKqGBeDS3AUIFaxJoqKphXhwow8NBMT1CFCtWiwwVE8DMNFaZHpxVg4G04KkivfgvA+2HwNg0VpkenFICn6ahArTpcAF4uQ4VqUXcBvH8bVDiPugrgzduhAu6pqQDeuT0qaEnuAtj9MaiwSq4C2PmRqNCpdgtgz0ejgkdVC+D+I1DhTbIA7jyO3QKYezyyAM7+G34KeL3/AcCCgEYgIqXZAAAAAElFTkSuQmCC';
 const stringIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURf///wAAAFXC034AAAACdFJOU/8A5bcwSgAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMhMBR3QAAAC4ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEQAAAFoAAABphwQAAQAAAGwAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuMTIAAAMAAJAHAAQAAAAwMjMwAaADAAEAAAABAAAABaAEAAEAAACWAAAAAAAAAAIAAQACAAQAAABSOTgAAgAHAAQAAAAwMTAwAAAAANmnmpXJtwtfAAAAh0lEQVQ4T82RQRKAIBDD5P+fdrdEEC3g0RycbpvRg0dZcQREz07IfSVonwvMXqhjEJFqgFWvdwJrnaYCeSoQvwvZtdII2geDhFBn/4oMGkXtngLT0L4ExdZeTRJ/47p63dNLUGpNchMw9PQCm6BJIWuObnAHVuASo2D4hxD7UhAcjt2++0ApJ1N9AxVWSB8pAAAAAElFTkSuQmCC';
+
+const runtime = Scratch.vm.runtime;
 
 class OBInlineVariables {
 
@@ -35,6 +36,7 @@ class OBInlineVariables {
         this.resetSpriteVariables();
       });
     }
+  //
 
   getInfo() {
     return {
@@ -81,7 +83,6 @@ class OBInlineVariables {
           }
         },
         {
-          // THIS SAYS SET NOT GET
           opcode: 'deleteSharedVar',
           blockType: Scratch.BlockType.COMMAND,
           text: 'Delete [type]var: [VAR]',
@@ -94,6 +95,41 @@ class OBInlineVariables {
                   type: Scratch.ArgumentType.STRING,
                   menu: 'sharedVariableList'
                 }
+          }
+        },
+        {
+          opcode: 'deleteAllSharedVars',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Delete [type] vars',
+          arguments: {
+            type: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'sharedVariableListAll'
+            }
+          }
+        },
+        {
+          opcode: 'deleteAllSpriteVars',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Delete all sprite vars in [sprite]',
+          arguments: {
+            sprite: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'TARGETS2'
+            }
+          }
+        },
+        '---',
+        {
+          opcode: 'getSharedString',
+          blockType: Scratch.BlockType.REPORTER,
+          text: ': [string]',
+          allowDropAnywhere: true,
+          arguments: {
+            string: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Hello {var}'
+            }
           }
         },
         {
@@ -113,24 +149,11 @@ class OBInlineVariables {
             }
         },
         {
-          opcode: 'getSharedString',
-          blockType: Scratch.BlockType.REPORTER,
-          text: ': [string]',
-          allowDropAnywhere: true,
-          arguments: {
-            string: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'Hello {var}'
-            }
-          }
-        },
-        {
           opcode: 'listVars',
           blockType: Scratch.BlockType.REPORTER,
           text: 'All [type] Variables as [outType]',
           allowDropAnywhere: true,
-          // IDK why it don't work man.
-          hideFromPalette: true,
+          hideFromPalette: false,
           arguments: {
             type: {
               type: Scratch.ArgumentType.STRING,
@@ -139,6 +162,21 @@ class OBInlineVariables {
             outType: {
               type: Scratch.ArgumentType.STRING,
               menu: 'outType'
+            }
+          }
+        },
+        {
+          opcode: 'getSpriteVar',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Sprite var:[var] of [sprite]',
+          arguments: {
+            var: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '{var}'
+            },
+            sprite: {
+              type: Scratch.ArgumentType.STRING,
+              menu: 'TARGETS2'
             }
           }
         },
@@ -211,10 +249,31 @@ class OBInlineVariables {
       ],
       menus: {
         sharedVariableList: {acceptReporters: true, items: [{text: 'global', value: '1'},{text: 'sprite', value: '0'},{text: 'thread', value: '2'}]},
-        outType: {acceptReporters: true, items: [{text: 'json', value: '0'},{text: 'names', value: '1'}]}
+        sharedVariableListAll: {acceptReporters: true, items: [{text: 'all', value: 'all'},{text: 'all global', value: '1'},{text: 'all sprite', value: '0'},{text: 'all thread', value: '2'}]},
+        outType: {acceptReporters: true, items: [{text: 'json', value: '0'},{text: 'names', value: '1'}]},
+          TARGETS2: {
+            acceptReporters: true,
+            items: this._getTargets(true),
+          }
       }
     };
   }
+    
+    // Taken from Sharkpool's "Added Motion" extension. <https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/extension-code/Added-Motion.js> <https://sharkpools-extensions.vercel.app/> <https://github.com/SharkPool-SP>
+    _getTargets(enable) {
+      const spriteNames = [];
+      if (enable) spriteNames.push({ text: "myself", value: "_myself_" });
+      const targets = runtime.targets;
+      for (let index = 1; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) {
+          const targetName = target.getName();
+          spriteNames.push({ text: targetName, value: targetName });
+        }
+      }
+      return spriteNames.length > 0 ? spriteNames : [""];
+    }
+    //
 	
   setVar(args, util) {
     const thread = util.thread;
@@ -242,6 +301,22 @@ class OBInlineVariables {
         thread.variables = Object.create(null);
     }
     return thread.variables[args.VAR] ?? "";
+  }
+
+  getSpriteVar(args, util) {
+    try {
+    let sprite = '';
+    if (args.sprite == '_myself_') {
+      sprite = util.target.getName();
+      } else {
+      sprite = args.sprite;
+      }
+    if (!this.spriteVariables[sprite]) {
+      this.spriteVariables[sprite] = Object.create(null);
+    }
+    return this.spriteVariables[sprite][args.var] ?? '';
+
+    } catch (error) {console.error(error);}
   }
 
     getString(args, util) {
@@ -280,7 +355,6 @@ class OBInlineVariables {
   }
   }
 
-  // Copied from above, but it deletes it instead /:
   deleteSharedVar(args, util) {
   if (args.type === 0) {
     const sprite = util.target.getName();
@@ -302,11 +376,48 @@ class OBInlineVariables {
   }
   }
 
+  deleteAllSharedVars(args, util) {
+  try {
+    if (args.type === 0 | args.type === 'all') {
+    const sprite = util.target.getName();
+    if (!this.spriteVariables[sprite]) {
+      this.spriteVariables[sprite] = Object.create(null);
+    }
+    this.spriteVariables = Object.create(null);
+  }
+  if (args.type === 1 | args.type === 'all') {
+    if (!this.globalVariables) {
+      this.globalVariables = Object.create(null);
+    }
+    this.globalVariables = Object.create(null);
+  }
+   if (args.type === 2 | args.type === 'all') {
+    const thread = util.thread;
+    if (!thread.variables) {
+        thread.variables = Object.create(null);
+    }
+    thread.variables = Object.create(null);
+  }
+  } catch (error) {console.error(error);}
+  }
+
+  deleteAllSpriteVars(args,util) {
+    try {
+      let sprite = ''
+      if (args.sprite == '_myself_') {
+      sprite = util.target.getName();
+      } else {
+      sprite = args.sprite;
+      }
+    delete this.spriteVariables[sprite];
+    } catch (error) {console.error(error);}
+  }
+
   getSharedVar(args, util) {
   if (args.type === 0) {
     const sprite = util.target.getName();
     if (!this.spriteVariables[sprite]) {
-      this.spriteVariables[sprite] = Object.create(null);
+      this.spriteVariables[sprite] = Object.create(null) ?? "";
     }
     const spriteVars = this.spriteVariables[sprite];
     return spriteVars[args.VAR];
@@ -314,7 +425,7 @@ class OBInlineVariables {
       if (!this.globalVariables) {
         this.globalVariables = Object.create(null);
       }
-    return this.globalVariables[args.VAR];
+    return this.globalVariables[args.VAR] ?? "";
     } else {
     const thread = util.thread;
     if (!thread.variables) {
@@ -354,49 +465,46 @@ class OBInlineVariables {
   }
 
   listVars(args, util) {
-    if (args.type === 3) {
+    try {
+    if (args.type === 0) {
       
-    } else if (args.type === 0) {
-      // Sprite
-      const spriteName = util.target.getName();
-      if (!this.spriteVariables) {
-        this.spriteVariables = Object.create(null);
-      }
-      if (!this.spriteVariables[spriteName]) {
-      this.spriteVariables[spriteName] = Object.create(null);
-      if (args.outType === 1) {
-      return Object.keys(this.spriteVariables[spriteName]);
-      } else {
-      return this.spriteVariables[spriteName];
-      }
-    }
-    } else if (args.type === 1) {
-      // Global
-      if (!this.globalVariables) {
-        this.globalVariables = Object.create(null);
-      }
-      const runtime = this.globalVariables;
-      if (args.outType === 1) {
-      return Object.keys(runtime);
-      } else {
-      return runtime;
-      }
+     if (args.outType === 1) {
+      let outJSON = Object.create(null);
+      Object.keys(this.spriteVariables).forEach(i => outJSON[i] = Object.keys(Object.values(this.spriteVariables)[Object.keys(this.spriteVariables).indexOf(i)]));
+      return outJSON;
     } else {
-      // Thread
-      const thread = util.thread;
-      if (!thread.variables) {
-        thread.variables = Object.create(null);
+      return this.spriteVariables;
     }
-    if (args.outType === 1) {
-    return Object.keys(thread.variables);
+    
     } else {
-    return thread.variables;
+      if (args.type === 1) {
+        
+        if (args.outType === 1) {
+        return Object.keys(this.globalVariables);
+        } else {
+          return this.globalVariables;
+        }
+      } else {
+        // Only gets thread variables in the script it's declared in!
+        if (args.outType === 1) {
+        return Object.keys(util.thread.variables) ?? [];
+        } else {
+          return util.thread.variables ?? {};
+        }
+      
+      }
     }
+    } catch {
+      if (args.outType === 1) {
+        return [];
+      } else {
+        return {};
+      }
     }
   }
 
   Credits() {
-    alert(`MIT Licence \n Based on Temporary Variables by LilyMakesThings & Mio \n -LilyMakesThings: https://scratch.mit.edu/users/LilyMakesThings/ \n -Mio: https://scratch.mit.edu/users/0znzw/ \n\nInspired by a random Reddit post I saw a while ago, I can't find it rn though ):`);
+    alert(`MIT Licence \n Based on Temporary Variables by LilyMakesThings & Mio \n -LilyMakesThings: https://scratch.mit.edu/users/LilyMakesThings/ \n -Mio: https://scratch.mit.edu/users/0znzw/ \n\n Sprite Menu from Sharkpool's Added Motion Extensions:\n -Sharkpool:\n   <https://sharkpools-extensions.vercel.app/>\n   <https://github.com/SharkPool-SP>\n\n -<https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/extension-code/Added-Motion.js>\n\nInspired by a random Reddit post I saw a while ago, I can't find it rn though ):`);
   }
 
   Info() {
@@ -418,4 +526,4 @@ class OBInlineVariables {
 }
 Scratch.extensions.register(new OBInlineVariables());
 
-})(Scratch);
+})(Scratch);} catch (error) {console.error(error);}
