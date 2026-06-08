@@ -29,6 +29,8 @@ function purify(html) {
 }
 //
 
+const ver = '1.0.0'
+
 // Licence of HTML5 and CSS3 logos: Creative Commons Attribution 3.0 Unported <https://creativecommons.org/licenses/by/3.0/>
 // icon and cssIcon attributed to the W3C. <https://www.w3.org/>
 const icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMzYyLjggNDExLjQiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTMzIDM3MC40IDAgMGgzNjIuOGwtMzMgMzcwLjItMTQ4LjcgNDEuMiIgZmlsbD0iI2U0NGQyNiIvPjxwYXRoIGQ9Ik0xODEuNCAzNzkuOVYzMC40aDE0OC4zbC0yOC4zIDMxNiIgZmlsbD0iI2YxNjUyOSIvPjxwYXRoIGQ9Ik02Ny40IDc1LjdoMTE0djQ1LjRoLTY0LjJsNC4yIDQ2LjVoNjB2NDUuM0g3OS44bTIgMjIuOGg0NS42bDMuMiAzNi4zIDUwLjggMTMuNlYzMzNsLTkzLjItMjYiIGZpbGw9IiNlYmViZWIiLz48cGF0aCBkPSJNMjkwLjggMTIxLjFIMTgxLjJWNzUuN0gyOTVNMjc0LjIgMzA3bC05MyAyNS44di00Ny4ybDUwLjctMTMuNiA1LjMtNTloLTU2di00NS40aDEwNS41IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg=='
@@ -355,6 +357,7 @@ class OBhtml {
         //     defaultValue: 1,
         //   }
         // },'#264de4','#2965f1','#264de4',cssIcon),
+        label('Ver: '+ver+'')
       ],
       menus: {
         positions: {
