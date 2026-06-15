@@ -10,7 +10,7 @@
   if (!Scratch.extensions.unsandboxed) throw new Error("'OBextendedCursors' Must Be Run Un-Sandboxed! - Requires JS to Set The Scratch Canvas's CSS");
 
 const icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABmZVhJZklJKgAIAAAAAQBphwQAAQAAABoAAAAAAAAAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAEQAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAAIvvHMbnUA7gAAAEGSURBVFhH7c3hDoMwCARg3/+lNw+Pikhdadl+7UsuMRTOLfBiVmnPcJ8/sMmKOpAuWYjom8kIXp8wY0Jce4Y9lx5enDBjbuQhS+968YKdRgYrZjp403A8B/fZDt40HM/BfbaDN026wJq5580Fn/Jw6+NFO3suuDoH9zaef99zIw8Voh7bz++QLKyKejDTOb9DsrAKPb2Y91Bb+hb9B37Ww9V66GYecb0WepmPZLGSdqJ8FE9roI8ZxtM66GSGyHI19g7jWR10HtVjeFYHnUf1GDmoon0ozuD5GvQwaax4hr3err7tmdItVroT7Zr5Etbd4Y1RdubfpkmRp3Ms/IL9oc3fom17A/33WRiMzhETAAAAAElFTkSuQmCC";
-const canvas = document.querySelector('canvas');
+const canvas = Scratch.renderer.canvas;
 let currentCursor = 'default'
 
 class OBextendedCursors {
