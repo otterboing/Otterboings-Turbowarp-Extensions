@@ -26,6 +26,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 
 - [Cursors-Extended ![](Extra%20Files/UnSandboxed!.png)](Extensions/Cursors-Extended.js) - Requires JS to change the Scratch Canvas's CSS.
 - [Inline Variables ![](Extra%20Files/UnSandboxed!.png)](Extensions/InlineVariables.js) - Requires JS to manage the variables.
+- [HTML ![](Extra%20Files/UnSandboxed!.png)](Extensions/HTML.js) - Requires JS to manage and edit the DOM.
 
 
 # Glossary
@@ -36,7 +37,8 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
 - [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
-- [Extra Array <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](Extensions/extraArray.js)
+- [Extra Array ](Extensions/extraArray.js)
+- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"> <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](#html)
 
 ---
 
