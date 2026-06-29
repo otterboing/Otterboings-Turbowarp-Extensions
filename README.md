@@ -37,7 +37,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
 - [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
-- [Extra Array ](Extensions/extraArray.js)
+- [Extra Array ](#extra-array)
 - [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](#html)
 
 ---
