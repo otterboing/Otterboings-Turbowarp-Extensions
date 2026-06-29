@@ -38,7 +38,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Colorful Comments!](#colorful-comments)
 - [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
 - [Extra Array ](Extensions/extraArray.js)
-- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"> <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](#html)
+- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">](#html)
 
 ---
 
@@ -190,3 +190,39 @@ There has been an a great effort to find and use sources not linked to "AI".
 See [NoBots.md](NoBots.md) for more details.
 
 ---
+
+# License
+
+All code and extensions are licensed under the [MIT License](LICENSE) unless marked otherwise.
+
+Some assets in this repo belong to others and are licensed as such. 
+
+Please read the license info of the assets you are using.
+
+## MIT License
+
+Below is a copy of the MIT License, please use [LICENSE](LICENSE) instead.
+
+---
+
+MIT License
+
+Copyright (c) 2026 OtterBoing
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
