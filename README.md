@@ -95,17 +95,82 @@ Reference variables in a string and replace them with their value!
 - Var: `Var:[variableName]` "Returns the value."
 - : `[string]` "Searches the input for references to any variables and replaces them with their values."
 
+TODO
+
 ### Extra Array <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">
 [Extra Array](Extensions/extraArray.js)
 
 Some Misc Tools For Handling Arrays!
 
 #### Blocks:
+
 - Search Array: `Search [array] for [query]` "Searches an array for a certain query!"
-- Contains Only?: `[array] contains only [query]?` "Checks if and array only contains a certain query."
+- Contains Only?: `[array] contains only [query]?` "Checks if an array only contains a certain query."
 - Insert Every: `Insert [input] every [number] items in [array]` "Inserts an item every `number` of items in an array."
 - Count Occurrences: `# of [query] in [array]` "Return the number of occurrences of a certain query in an array."
 - Pop: `Pop: [array]` "Removes the last item in an array Or the last character of a string."
+
+### HTML <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">
+[HTML](extensions/HTML.js)
+
+Add, remove, modify and style elements on the page based on selectors!
+
+HTML Sanitized by [DOMPurify](https://github.com/cure53/dompurify)
+
+#### Blocks:
+
+- Insert HTML: `Insert html: [html] in: [selector] at: [Before, At start, Before end, After]`
+- Remove Element: `Remove selector: [selector] #:[index] from page`
+- Remove All: `Remove all matching selector:[selector] from page`
+- Count Elements: `Count [selector]`
+
+<br>
+
+- Set Inner HTML: `Set inner html of [selector] #:[index] to: [html]`
+- Get Inner HTML: `Get inner html of [selector] #:[index]` "Returns the inner html or text of the requested element."
+
+<br>
+
+- Set Value: `Set value of selector: [selector] #:[index] to: [value]`
+- Set Value All: `Set value of all matching selector: [selector] to: [value]`
+- Get Value: `Get value of selector: [selector] #:[index]`
+
+<br>
+
+- Focus Blur: `[Focus,Blur] selector: [selector] #:[index]`
+- Show Hide: `[Hide, Show] selector: [selector] #:[index]`
+- Show Hide All: `[Hide, Show] all matching selector: [selector]`
+
+<br>
+
+- Set Attribute: `Set attribute: [attribute] of: [selector] #:[index] to: [value]`
+- Set Attribute All: `Set attribute: [attribute] for all matching selector: [selector] to: [value]`
+- Get Attribute: `Get attribute: [attribute] from selector: [selector] #:[index]`
+
+<br>
+
+- Set Page Title: `Set page title: [title]`
+- Get Page Title: `Page title` "Returns the page title from `document.title`"
+- Set Page Icon: `Set page icon to url: [url]`
+- Get Page Icon: `Page icon` "Returns the last set page icon. It will return nothing if the icon has not been set yet."
+
+<br>
+
+- Sanitize: `Sanitize: [html]` "Allows the user to use the sanitize function from [DOMPurify.js](https://github.com/cure53/dompurify)"
+
+<br>
+
+- Set StyleSheet: `Set StyleSheet with id:[id] to css: [css]`
+- Remove StyleSheet: `Remove StyleSheet with id:[id]`
+- Remove All StyleSheets: `Remove All StyleSheets`
+- Get StyleSheet: `StyleSheet: [id]` "Returns the requested StyleSheet"
+- Get All StyleSheets: `All StyleSheets` "Returns an array of all StyleSheets"
+
+<br>
+
+- Set Style: `Set style: [style] of: [selector] #:[index] to: [value]`
+- Set Style All: `Set style: [style] of all elements matching: [selector] to: [value]`
+- Get Style: `Style: [style] of: [selector] #:[index]`
 
 ---
 ---
