@@ -1,4 +1,5 @@
 // MIT Licence
+// Colorful Comments.js
 // Inspired by the comments extensions by LilyMakesThings https://extensions.turbowarp.org/Lily/CommentBlocks.js
 // LilyMakesThings: https://scratch.mit.edu/users/LilyMakesThings/ https://github.com/LilyMakesThings
 // Written by https://github.com/otterboing
