@@ -25,7 +25,8 @@ const grey = '#7F7F7F';
 const grey2 = '#3F3F3F';
 const contrast = '#3F3F3F';
 const contrast2 = '#C1C1C1';
-const contrast3 = '#C1C1C1'
+const contrast3 = '#C1C1C1';
+const error = {1: '#7F0000',2: '#BF0000',3: '#FF0000'}
 const icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABmZVhJZklJKgAIAAAAAQBphwQAAQAAABoAAAAAAAAAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAEQAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAAIvvHMbnUA7gAAASHSURBVHhe7ZpNbhNBFISdhCRCYskBEAvEmh3HCFyBXYTEMVhxAnbZseUaCMQdUHYsskRKYqbaXZNy+fXM2J5MOolLKvW4e2K/r9782KPMdtppp52GaP7+eJ788sk8T1WjN1dv53B+Ob5aeHFeulN9uHqVwOHn1yfJeWk8RfDz0/2Fm+282+SK4OHD69NxawrhOWbnXSdTF/ytBIBBrfBTh+DwzdSSEcDRv8/j1KPwVPv6DkIonPO5spvaRg/AleY8gLOntxpCCR5W4fXxxbf5/vmP7WrJMCsfALXzBp/Gxs3aqCqd881SruhGmINHC6CktBbAX/4+GjWELng4EuYnCSCtB/AYYbwPhO3zP3tpDiP86+KwHemvV8+S85+1X3AcPl/pcyWrwtrxz7/J6Y02UV8AUFovwLsJrgFE8DC6Xuo84btqw9pkAQBuG/B14fu6D2Ed8AffL28vAKyl9Z7u9wWwLvzQIwDwGweQzusgALxWR8B0H/g68BoA7vH5Pr9kFV6PGgBG2js+ZecBjns87/P0Un253tECoNNcA0tH0HAf+NjwvNjlC15rwB9+2SAAwrduYDEdOQqiL4BN4aPDHiY8O04Dnm72G6YIviuAdcC3gWfnoxr64A8+Xic3+3YrhM8jlksmvIYAWK4rPOcUnnNdnedhz30jd8Ennyzc7LuqEF6MXUr27hOY64T3ANh5znV1nuc79408BB5+/SJdJG8UwlsI2K3kCF4DgD0AmIc9Xzu8dn5IAEPhObZBrMCLeX7zQ9wO3xVClx3eOw9HV3p4nc673+01ISzBWwiAx+gfSiu82ztessNHnSd8FMBQeA0B4PQiAIFWcB4BboIT3kPgIQ9vcrUvwfNCRw+BV3ANgOMsQQedj6zgDt0Hr+ARfF/nN4GPwN2LAAy8FMJQeD9Mp7LDewiDAojgHTwKwMGnloag0AoehZACcGC3B9AFf5diDXAUQOQ2gDE6X4s0gAhanZ7XlQxAjiV4BlCT2JAI2B0GMLTzNXaf2joAgrkVHrc4zNUo1htBq1cCACBGgvGNuE342gOAUFsErW4D0MPeoXWb4DTXahRqi6DVKQBAawgK7NsaAH/O1irUFkGrZ4SmcQo4NLe18/xuz/UahdoiaPVSAIRXaN12eHyn53qNQm2fmvIicBhrYQD8Y992+PsQQAQOA74NAOC0Q3Ob8ASH8UuO+9Qo1FaC5xgGENk7D+MnLNZqFOuO4NUzhYf9Ph8d9ug8R35QTSrB9wZQgic4jc7rg4zaQojgHRw+25cASvDRYY+RAfAxVi0hsA6H9xAAjzEFUIJXcELTCs9HWHcdQgneTfh0BJTgPYA+eD7DYxFTBqGf6fAagoLTbQDbdJ7w+gBTi5rCCq7Qbg8hBTBG5xV+k6e3Qx5gDjUAOZbA2wDGhtcQhsK7HchNwJIVnNAc3cX/w9sEXh2CB/AaQgSzjh2c0BwjN6fP4v/xtoXXEO5D5+EET9XQ+SEhlLwV/BCtA9/X+fyW908OryE8eHjqUXbe9ajhqSK8gD9Y+J122umBaDb7DxQn725e3SkFAAAAAElFTkSuQmCC';
 
 
@@ -588,6 +589,147 @@ class OBColorfulComments {
             color1: '#FF263B',
             color2: '#ac1a29',
             color3: '#80131e',
+            isTerminal: true,
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: ''
+                }
+            }
+        },,
+        // Error
+        {
+            opcode: 'errorHat',
+            blockType: Scratch.BlockType.HAT,
+            func: 'hat',
+            text: '//^ [comment]',
+            isEdgeActivated: false,
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+            comment: {
+                 type: Scratch.ArgumentType.STRING,
+                defaultValue: ''
+                },
+            },
+        },
+        {
+            opcode: 'errorCommand',
+            blockType: Scratch.BlockType.COMMAND,
+            func: 'command',
+            text: '//: [comment]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: ''
+                }
+            }
+        },
+        {
+            opcode: 'errorConditional',
+            blockType: Scratch.BlockType.CONDITIONAL,
+            func: 'conditional',
+            text: '//| [comment]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: ''
+                }
+            }
+        },
+        {
+            opcode: 'errorReporter',
+            blockType: Scratch.BlockType.REPORTER,
+            func: 'reporter',
+            allowDropAnywhere: true,
+            text: '[comment] ⇠ //( [input]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: 'Comment'
+                },
+                input: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: ''
+                }
+            }
+        },
+        {
+            opcode: 'errorBoolean',
+            blockType: Scratch.BlockType.BOOLEAN,
+            func: 'boolean',
+            allowDropAnywhere: true,
+            text: '[comment] ⇠ //{ [input]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: 'Comment'
+                },
+                input: {
+                    type: Scratch.ArgumentType.BOOLEAN
+                }
+            }
+        },
+        {
+            opcode: 'errorReporter2',
+            blockType: Scratch.BlockType.REPORTER,
+            func: 'reporter',
+            allowDropAnywhere: true,
+            text: '[input] //) ⇢ [comment]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: 'Comment'
+                },
+                input: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: ''
+                }
+            }
+        },
+        {
+            opcode: 'errorBoolean2',
+            blockType: Scratch.BlockType.BOOLEAN,
+            func: 'boolean',
+            allowDropAnywhere: true,
+            text: '[input] //} ⇢ [comment]',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
+            arguments: {
+                comment: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: 'Comment'
+                },
+                input: {
+                    type: Scratch.ArgumentType.BOOLEAN
+                }
+            }
+        },
+        {
+            opcode: 'errorEnd',
+            blockType: Scratch.BlockType.COMMAND,
+            text: '//_ [comment]',
+            func: 'end',
+            color1: error[1],
+            color2: error[2],
+            color3: error[3],
             isTerminal: true,
             arguments: {
                 comment: {
