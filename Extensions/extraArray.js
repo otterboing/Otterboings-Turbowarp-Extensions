@@ -11,8 +11,44 @@ const icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0
 
 const ver = '1.0.0';
 
-function label(name) {
-  return {blockType: 'label',text: name}
+const color1Def = '';
+const color2Def = '';
+const color3Def = '';
+
+function getColor(color,num = 1) {
+  if (color == null | color == '') {return eval(`color`+num+`Def`);} else {return color;}
+}
+
+function label(name) {return {blockType: 'label', text: name};}
+
+function MI(text,value) {return {text: text, value: value}}
+
+
+function makeBlock(opcode,type,text,args,extra,icon,hide,color1,color2,color3) {
+  const block = {
+    opcode: opcode,
+    blockType: type,
+    text: text,
+    allowDropAnywhere: true,
+    blockIconURI: icon,
+    arguments: args,
+    hidefromPalette: hide,
+  };
+  if (typeof extra === "object") {
+    Object.assign(block,extra);
+  }
+  return block;
+}
+
+function ARG(name,type,defaultValue) {return ``+name+`: {type: `+type+`, defaultValue: `+defaultValue+`}`}
+
+// Use this from now on!
+function checkType(object) {
+  if (typeof object == 'string') {
+    return JSON.parse(object);
+  } else {
+    return object;
+  }
 }
 
 class OBExtraArray {
@@ -35,7 +71,7 @@ class OBExtraArray {
         {
           opcode: 'searchArray',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'Search [json] for:[query]',
+          text: 'Search array: [json] for:[query]',
           allowDropAnywhere: true,
           arguments: {
             json: {
@@ -51,7 +87,7 @@ class OBExtraArray {
         {
           opcode: 'containsOnly',
           blockType: Scratch.BlockType.BOOLEAN,
-          text: '[json] contains only:[query]?',
+          text: 'Array: [json] contains only:[query]?',
           allowDropAnywhere: true,
           arguments: {
             json: {
@@ -67,7 +103,7 @@ class OBExtraArray {
         {
           opcode: 'insertEvery',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'Insert [input] every [number] items in: [json]',
+          text: 'Insert: [input] every: [number] items in array: [json]',
           allowDropAnywhere: true,
           arguments: {
             input: {
@@ -84,10 +120,39 @@ class OBExtraArray {
             }
           }
         },
+        makeBlock('insertAt', Scratch.BlockType.REPORTER,'For array: [array] at: [position] insert: [text]',{
+          array: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '[" World!","!"]'
+          },
+          position: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'position'
+          },
+          text: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'Hello'
+          }
+        }),
+        makeBlock('insertAtIndex',Scratch.BlockType.REPORTER,'For array: [array] at index: [position] Insert: [text]', {
+          array: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '[" World!","!"]'
+          },
+          position: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '0'
+          },
+          text: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'Hello'
+          }
+        }),
         {
+          //of 
           opcode: 'countOccurrences',
           blockType: Scratch.BlockType.REPORTER,
-          text: '# of [query] in [json]',
+          text: 'Count: [query] in array: [json]',
           allowDropAnywhere: true,
           arguments: {
             query: {
@@ -112,10 +177,31 @@ class OBExtraArray {
             }
           }
         },
+        label('Advanced'),
+        {
+          blockType: Scratch.BlockType.BUTTON,
+          text: 'More Info',
+          func: 'advancedInfo'
+        },
+        makeBlock('convertToObject',Scratch.BlockType.REPORTER,'Parse: [input] into JS object',{
+          input: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '{"list":["Convert","Me","!"]}'
+          }
+        }),
+        makeBlock('stringifyObject',Scratch.BlockType.REPORTER,'Stringify js object: [object]',{
+          object: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '{"your object": "here"}'
+          }
+        }),
         label('Ver: '+ver+''),
       ],
       menus: {
-        
+        position: {
+          acceptReporters: true,
+          items: [MI('start','start'),MI('end','end')]
+        }
       }
     };
   }
@@ -124,10 +210,15 @@ class OBExtraArray {
   alert(`MIT Licence`);
   }
 
+  //do 
+  advancedInfo() {
+    alert(`Parsing to Object:\n\n--- This block converts the JSON or Array into a js object.\n\n--- This is for any extensions that use direct js objects for some reason.\n\n--- The output will NOT work with any blocks in the default extension (Or most others probably).\n\n--- JS objects do work in this extension. They may or may not be faster, I ain't checking /:\n\n--- Objects work with variables btw.`)
+  }
+
   searchArray(args) {
     let outArray = [];
     try {
-    const inArray = JSON.parse(args.json);
+    const inArray = typeof args.json == "string" ?  JSON.parse(args.json) : args.json; ;
     if (Array.isArray(inArray))
     inArray.forEach((element) => (element).includes(args.query) ? outArray.push((element)) : outArray);
     return outArray;
@@ -135,11 +226,11 @@ class OBExtraArray {
     return "[]"; console.error(error);
     }
   }
-
+  
   containsOnly(args) {
     try {
     let matchNum = 0;
-    const inArray = JSON.parse(args.json);
+    const inArray = typeof args.json == "string" ? JSON.parse(args.json) : args.json;
     if (Array.isArray(inArray))
     inArray.forEach((element) => (element).includes(args.query) ? matchNum++ : matchNum);
     return matchNum == inArray.length;
@@ -152,7 +243,7 @@ class OBExtraArray {
   // This is bad, I don't know why but I can tell...
   insertEvery(args) {
     try {
-    const inArray = JSON.parse(args.json);
+    const inArray = typeof args.json == "string" ? JSON.parse(args.json) : args.json;
     const arrayLength = inArray.length;
     if (!args.number == 0) {
     const loopCount = arrayLength - args.number; 
@@ -173,9 +264,47 @@ class OBExtraArray {
     }
   }
 
+  insertAt(args) {
+    try {
+      const array = typeof args.array == "string" ? JSON.parse(args.array) : args.array;
+      if (Array.isArray(array)) {
+      if (args.position == 'end') {
+        array.forEach(e => {
+          array[array.indexOf(e)] = e += args.text;
+        });
+      } else {
+        array.forEach(e => {
+          array[array.indexOf(e)] = args.text + e;
+        });
+      }
+    return JSON.stringify(array);
+    } else {
+    return args.array;
+    }
+    } catch (error) {
+      return args.array; console.error(error);
+    }
+  }
+
+  insertAtIndex(args) {
+    try {
+      const array = typeof args.array == "string" ? JSON.parse(args.array): args.array;
+      if (Array.isArray(array)) {
+      array.forEach(e => {
+        array[array.indexOf(e)] = [e.slice(0, args.position), args.text, e.slice(args.position)].join('');
+      });
+      return JSON.stringify(array);
+      } else {
+      return args.array
+      }
+    } catch (error) {
+    return args.array; console.error(error);
+    }
+  }
+
   countOccurrences(args) {
     try {
-    const inArray = JSON.parse(args.json);
+    const inArray = typeof args.json == "string" ? JSON.parse(args.json) : args.json;
     if (Array.isArray(inArray)) {
       let num = 0;
       inArray.forEach((element) => {
@@ -194,11 +323,13 @@ class OBExtraArray {
   // This also works with strings... Just badly!
   popThis(args) {
     try {
-      if (Array.isArray(JSON.parse(args.json))) {
-      const inArray = JSON.parse(args.json);
+      const inArray = typeof args.json == "string" ? JSON.parse(args.json) : args.json;
+      if (Array.isArray(inArray)) {
         inArray.pop();
         return inArray;
-      }
+      } else if (typeof args.json == "string") {
+        return args.json.slice(0,-1);
+      } else {return args.json}
     } catch (error) {
       try {
       return args.json.slice(0,-1);
@@ -213,6 +344,25 @@ class OBExtraArray {
     } catch (error) {
 
     }
+  }
+
+  //Advanced
+
+  convertToObject(args) {
+    try {
+      if (typeof args.input == 'object') {
+      return args.input;
+      } else {
+      return JSON.parse(args.input);
+      }
+    } catch (error) {return error;console.error(error);}
+  }
+
+  stringifyObject(args) {
+    try {
+      const object = checkType(args.object);
+      return JSON.stringify(object);
+    } catch (error) {return error; console.error(error);}
   }
   
 }
