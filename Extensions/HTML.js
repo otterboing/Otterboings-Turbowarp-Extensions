@@ -1,3 +1,4 @@
+// Name: HTML.js
 // OBhtml Licence: MIT
 // Original by https://github.com/otterboing
 // https://github.com/otterboing/Turbowarp-Extensions/blob/main/Extensions/HTML.js
@@ -10,7 +11,8 @@
 if (!Scratch.extensions.unsandboxed) throw new Error("OBhtml Must Be Run Un-Sandboxed! - Requires JS modify the page.");
 
 
-// If you don't like all the extra licences you can just remove the icons and DOMPurify. Fair Warning removing DOMPurify will open up users of your project to XML attacks. NEVER DO THIS WITHOUT REPLACING IT IN A MULTIPLAYER GAME!
+// If you don't like all the extra licences you can just remove the icons and DOMPurify. Fair Warning removing DOMPurify will open up users of your project to XML and XSS attacks.
+// NEVER DO THIS WITHOUT REPLACING IT IN A MULTIPLAYER GAME!
 
 // You can replace the sanitizer by replacing DOMPuify 👇 and modifying the Purify() function.
 
@@ -29,11 +31,18 @@ function purify(html) {
 }
 //
 
-
-const ver = '1.2.1';
-// Added a bunch of new blocks for getting and setting an element's value and attribute.
-// As well as ways to get and set the page's title and icon. 
-// Also a block that to allows the user to use the sanitize function from DOMPurify.
+const ver = '1.3.0';
+// > Added blocks to get and set outer html of one or all elements matching a selector.
+// > Added blocks to get the mouse position on the page and in certain elements (based on the element's dimentions).
+// > Added blocks to check if one or any elements matching a selector match another selector (like ":hover" or ":active").
+// >> Added a block to get all the attributes of a certain element matching a selector as JSON!
+// >> Added blocks to set one or all matching a selector via JSON!
+// >> Added blocks to remove attributes from one or all matching a selector via ARRAY!
+// >> Added a Block to get all the attributes of all elements matching a selector as an array containing JSONs (using the order of the DOM).
+// >> Added blocks to remove a certain attribute from one or all matching a selector.
+// >> Moved mouseDown to a new Mouse section with the mouse position blocks.
+// >> Added blocks to add/remove classes in one or all matching a selector via text separated by commas or an array.
+// >> Added blocks to get all classes of one or all elements matching a selector.
 
 // Licence of HTML5 and CSS3 logos: Creative Commons Attribution 3.0 Unported <https://creativecommons.org/licenses/by/3.0/>
 // icon and cssIcon attributed to the W3C. <https://www.w3.org/>
@@ -45,15 +54,10 @@ const color2Def = '#f16529';
 const color3Def = '#e44d26';
 //
 // Allows for choosing the selector [Scratch="canvas"] to get the correct canvas.
-Scratch.vm.renderer.canvas.setAttribute('Scratch','canvas');
-
-//Logging when not packaged
-if (!Scratch.vm.runtime.isPackaged) {
-var log = true;
-console.warn('(OBhtml) Logging errors.\nLogging is disabled by default when packaged.')
-} else {
-var log = false;
-}
+const canvas = Scratch.vm.renderer.canvas;
+canvas.setAttribute('Scratch','canvas')
+canvas.classList.add('sc-Canvas');
+canvas.setAttribute('sc-Canvas','true');
 
 function getColor(color,num = 1) {
   if (color == null | color == '') {return eval(`color`+num+`Def`);} else {return color;}
@@ -79,9 +83,97 @@ function makeBlock(opcode,type,text,args,color1,color2,color3,icon,hide) {
   }
 }
 
+function makeButton(text,func) {
+  return {
+    blockType: Scratch.BlockType.BUTTON,
+    text: text,
+    func: func
+  }
+}
+
 function ARG(name,type,defaultValue) {return ``+name+`: {type: `+type+`, defaultValue: `+defaultValue+`}`}
 
 const ogTitle = document.title;
+
+const mouse = {
+  page: {x: 0},
+  screen: {y: 0},
+  click: null,
+  dblClick: null,
+  hover: null,
+  other: {}
+} 
+
+// Some utils.
+function getGreater(input1,input2) {
+const out = {}
+if (input1 > input2) {const g = input1;const l = input2} else {const g = input2; const l = input1;};
+out[lesser] = l;
+out[greater] = g;
+return out;
+}
+
+function within(x,y,x1,y1,x2,y2) {
+const boundsX = OBgetGreater(x1,x2);
+const boundsY = OBgetGreater(y1,y2);
+  return !!x > boundsX[lesser] && x < boundsX[greater] && y > boundsY[lesser] && y < boundsY[greater];
+}
+
+// Thanks! https://henry.codes/writing/how-to-map-a-number-between-two-ranges/
+function map(value, oldMin, oldMax, newMin, newMax) {
+  return ((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin;
+}
+
+function clamp(value,min,max) {
+let out = value;
+if (value < min) {
+  out = min;
+} else if (value >  max) {
+  out = max;
+};
+return out;
+}
+
+function equalsAny(string,array) {
+  try { 
+    if (Array.isArray(array)) {
+      let matches = 0;
+      for (let i = 0; i < array.length | matches < 1; i++) {
+        string == array[i];
+      };
+      return matches > 0;
+    } else {
+      return false;
+    }
+  } catch (error) {console.error(error);}
+}
+
+function getElementFootprint(e) {
+  const nodeName = e.nodeName;
+  const attributes = Object.fromEntries(Array.from(e.attributes).map((a) => [a.nodeName, a.value]));
+  const att = ""+Object.keys(attributes).join()+""+Object.values(attributes).join()+""
+  const rect = e.getBoundingClientRect();
+  return btoa([nodeName,att,rect.left,rect.top,rect.right,rect.bottom,rect.width,rect.height].join());
+}
+
+function getAllAttributes(e) {
+  if (typeof e == "object") {
+  // Source - https://stackoverflow.com/a/57640258
+  // Posted by Djaouad, modified by community. See post 'Timeline' for change history
+  // Retrieved 2026-07-01, License - CC BY-SA 4.0
+  return makeString(Object.fromEntries(Array.from(e.attributes).map((a) => [a.nodeName, a.value])));
+  } else {
+  return '{}';
+  }
+}
+
+function makeString(json) {
+  if (typeof json == 'object') {
+  return JSON.stringify(json)
+  } else {
+  return json;
+  }
+}
 
 // ⬇ Thank you! ⬇
 
@@ -113,12 +205,70 @@ function changeFavicon(src) {
 //
 //
 
+// Warnings
+
+
+const confirm = {
+  importStyleSheets: false,
+  replaceBody: false,
+  hasReplacedAllAttributes: false
+}
+
+function showRemoveBodyWarning(selector) {
+    if (selector.toLowerCase() == 'body' | selector.toLowerCase() == '#app' & !vm.runtime.isPackaged & !confirm.replaceBody) {
+      if (window.confirm(`Are you sure you wan't to Delete the element using the selector `+selector.toLowerCase()+`? (Whole page)\n\nThis will break mostly everything and you'll Have to reload.\n -- You will lose unsaved work!\n\nThis warning will not show when packaged`)) {
+        confirm.replaceBody = true;
+      } else {
+        confirm.replaceBody = false;
+      }
+    return confirm.replaceBody;
+    } else {
+    return true;
+    }
+    }
+
+
+//
+
 class OBhtml {
 
   constructor() {
     if (!this.styleSheets) {
       this.styleSheets = Object.create(null);
     }
+
+    //Logging when not packaged
+    if (!Scratch.vm.runtime.isPackaged) {
+    this.log = true;
+    console.warn('(OBhtml) Logging errors.\nLogging is disabled by default when packaged.')
+    } else {
+    this.log = false;
+    }
+
+    addEventListener('mousemove', (e) => {
+      mouse.page.x = e.pageX;
+      mouse.page.y = e.pageY;
+    });
+
+    addEventListener('mouseover', (e) => {
+      mouse.hover = e.target;
+    });
+
+    addEventListener('click', (e) => {
+      mouse.click = e.target;
+    });
+
+    addEventListener('dblclick', (e) => {
+      mouse.dblClick = e.target;
+    });
+
+    addEventListener('focus', e => {
+      mouse.other.focus = e.target;
+    });
+
+    addEventListener('blur', e => {
+      mouse.other.blur = e.target;
+    });
   }
 
   getInfo() {
@@ -274,6 +424,41 @@ class OBhtml {
             }
         },
         '---',
+        makeBlock('setOuterHTML',Scratch.BlockType.COMMAND,'Set outer html of: [selector] #:[index] to: [html] ',{
+            selector: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '#span1'
+            },
+            html: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Hello!'
+            },
+            index: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: '1'
+            }
+          }),
+          makeBlock('setOuterHTMLAll',Scratch.BlockType.COMMAND,'Set outer html of all matching selector: [selector] to: [html]',{
+          selector: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '#span1'
+            },
+            html: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Hello!'
+            },
+        }),
+        makeBlock('getOuterHTML',Scratch.BlockType.REPORTER,'Get outer html from selector: [selector] #:[index]',{
+                selector: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '#span1'
+                },
+                index: {
+                  type: Scratch.ArgumentType.NUMBER,
+                  defaultValue: '1'
+                }
+            }),
+            '---',
         makeBlock('setValue',Scratch.BlockType.COMMAND,`Set value of selector: [selector] #:[index] to: [value]`,{
           selector: {
             type: Scratch.ArgumentType.STRING,
@@ -382,7 +567,30 @@ class OBhtml {
               menu: 'status'
             }
         }),
-        makeBlock('getMouseDown',Scratch.BlockType.BOOLEAN,'Mouse down?'),
+        makeBlock('matches',Scratch.BlockType.BOOLEAN,'Selector:[selector] #[index] matches selector:[selectorQuery]?',{
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          selectorQuery: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: ':hover'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        makeBlock('matchesAny',Scratch.BlockType.BOOLEAN,'Any matching selector:[selector] matches selector: [selectorQuery]?',{
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          selectorQuery: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: ':hover'
+          }
+        }),
         makeBlock('getElementInfo',Scratch.BlockType.REPORTER,'[info] of selector:[selector] #:[index]',{
           selector: {
               type: Scratch.ArgumentType.STRING,
@@ -396,6 +604,118 @@ class OBhtml {
               type: Scratch.ArgumentType.STRING,
               menu: 'info'
             }
+        }),
+        '---',
+        // mouse
+        makeBlock('getMouseDown',Scratch.BlockType.BOOLEAN,'Mouse down?'),
+        makeBlock('getMouseData',Scratch.BlockType.REPORTER,'Mouse [value]',{
+          value: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'xy'
+          }
+        }),
+        makeBlock('getMouseDataElement',Scratch.BlockType.REPORTER,'Mouse [value] in selector: [selector] #:[index]',{
+          value: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'xy'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '[Scratch="canvas"]'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        makeBlock('elementDBLClickedStatus',Scratch.BlockType.REPORTER,'Attribute: [attribute] of last [click] element',{
+          attribute: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'id'
+          },
+          click: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'click'
+          }
+        }),
+        makeBlock('elementDBLClickedStatusAll',Scratch.BlockType.REPORTER,'All attributes of last [click] element',{
+          click: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'click'
+          }
+        }),
+        '---',
+        makeBlock('changeClass',Scratch.BlockType.COMMAND,'[change] classes: [class] in selector: [selector] #:[index]',{
+          change: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'change'
+          },
+          class: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'Cool,cold'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        // makeBlock('removeClass',Scratch.BlockType.COMMAND,'Remove classes: [class] from selector: [selector] #:[index]',{
+        //   class: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: 'Cool,cold'
+        //   },
+        //   selector: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: '#span1'
+        //   },
+        //   index: {
+        //     type: Scratch.ArgumentType.NUMBER,
+        //     defaultValue: '1'
+        //   }
+        // }),
+        makeBlock('changeClassAll',Scratch.BlockType.COMMAND,'[change] classes: [class] in all matching selector: [selector]',{
+          change: {
+            type: Scratch.ArgumentType.STRING,
+            menu: 'change'
+          },
+          class: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '["Warm","hot"]'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1,[Scratch="canvas"]'
+          }
+        }),
+        // makeBlock('removeClassAll',Scratch.BlockType.COMMAND,'Remove classes: [class] from all matching selector: [selector]',{
+        //   class: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: 'cool,cold'
+        //   },
+        //   selector: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: '#span1'
+        //   }
+        // }),
+        makeBlock('getClassList',Scratch.BlockType.REPORTER,'Get classes of selector: [selector] #:[index]',{
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        makeBlock('getClassListAll',Scratch.BlockType.REPORTER,'Get classes of all matching selector: [selector]',{
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1,[Scratch="canvas"]'
+          }
         }),
         '---',
         {
@@ -432,10 +752,101 @@ class OBhtml {
                 },
                 value: {
                   type: Scratch.ArgumentType.STRING,
-                  defaultValue: 'I also have a Title now!'
+                  defaultValue: 'We all have Titles now!'
                 }
 
-        },'','','',''),
+        }),
+        makeBlock('removeAttribute',Scratch.BlockType.COMMAND,'Remove attribute: [attribute] from selector: [selector] #:[index]',{
+          attribute: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'title'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        makeBlock('removeAttributeAll',Scratch.BlockType.COMMAND,'Remove attribute: [attribute] from all matching selector: [selector]',{
+          attribute: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'title'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          }
+        }),
+        // makeBlock('removeAllAttributes',Scratch.BlockType.COMMAND,'Remove all attributes from selector: [selector] #[index]',{
+        //   selector: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: '#span1'
+        //   },
+        //   index: {
+        //     type: Scratch.ArgumentType.NUMBER,
+        //     defaultValue: '1'
+        //   }
+        // }),
+        // makeBlock('removeAllAttributesAll',Scratch.BlockType.COMMAND,'Remove all attributes from all matching selector: [selector]',{
+        //   selector: {
+        //     type: Scratch.ArgumentType.STRING,
+        //     defaultValue: '#span1'
+        //   }
+        // }),
+        '---',
+        makeBlock('setAttributeJSON',Scratch.BlockType.COMMAND,'Set attributes from JSON:[json] for: [selector] #:[index]',{
+            json: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '{"title":"I have a Title now!"}'
+            },
+            selector: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '#span1'
+            },
+            index: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: '1'
+            }
+          }),
+        makeBlock('setAttributeAllJSON',Scratch.BlockType.COMMAND,'Set attributes from JSON: [json] for all matching selector: [selector]',{
+                json: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '{"title":"We all have Titles now!"}'
+                },
+                selector: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '#span1,[Scratch="canvas"]'
+                }
+        
+        }),
+        makeBlock('removeAttributeARRAY',Scratch.BlockType.COMMAND,'Remove attributes in ARRAY: [json] from selector: [selector] #:[index]',{
+          json: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '["title","class"]'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: '1'
+          }
+        }),
+        makeBlock('removeAttributeAllARRAY',Scratch.BlockType.COMMAND,'Remove attributes in ARRAY: [json] from all matching selector: [selector]',{
+          json: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '["class","title"]'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          }
+        }),
+        '---',
         {
             opcode: 'getAttribute',
             blockType: Scratch.BlockType.REPORTER,
@@ -456,14 +867,41 @@ class OBhtml {
                 }
             }
         },
+        makeBlock('getAttributeAllCertain',Scratch.BlockType.REPORTER,'Get attribute:[attribute] from all matching selector:[selector]',{
+          attribute: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: 'title'
+          },
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1'
+          }
+        }),
+        makeBlock('getAttributeAll',Scratch.BlockType.REPORTER,'Get all attributes from selector: [selector] #:[index]',{
+          selector: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: '#span1'
+                },
+                index: {
+                  type: Scratch.ArgumentType.NUMBER,
+                  defaultValue: '1'
+                }
+        }),
+        makeBlock('getAttributeAllAll',Scratch.BlockType.REPORTER,'Get all attributes from all matching selector: [selector]',{
+          selector: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '#span1,[Scratch="canvas"]'
+          }
+        }),
         '---',
         makeBlock('setTitle',Scratch.BlockType.COMMAND,'Set page title: [title]',{
           title: {
             type: Scratch.ArgumentType.STRING,
-            defaultValue: 'Turbowarp!'
+            defaultValue: 'Scratch!'
           }
         }),
         makeBlock('getTitle',Scratch.BlockType.REPORTER,'Page title'),
+        makeBlock('getOGTitle',Scratch.BlockType.REPORTER,'Orginal Title'),
         makeBlock('setIcon',Scratch.BlockType.COMMAND,'Set page icon to url:[url]',{
           url: {
             type: Scratch.ArgumentType.STRING,
@@ -473,6 +911,7 @@ class OBhtml {
         makeBlock('getIcon',Scratch.BlockType.REPORTER,'Page icon'),
 
         '---',
+        makeButton('Note','SanitizeNote'),
         makeBlock('sanitize',Scratch.BlockType.REPORTER,'Sanitize: [input]',{
           input: {
             type: Scratch.ArgumentType.STRING,
@@ -506,6 +945,13 @@ class OBhtml {
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
         makeBlock('getStyleSheets',Scratch.BlockType.REPORTER,'All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        makeBlock('importStyleSheets',Scratch.BlockType.COMMAND,'Import StyleSheets from:[input] ',{
+          input: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: '{}'
+          }
+        },'#264de4','#2965f1','#264de4',cssIcon),
+        makeBlock('exportStyleSheets',Scratch.BlockType.REPORTER,'Export StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
         '---',
         makeBlock('setStyle',Scratch.BlockType.COMMAND,'Set style:[style] of: [selector] #: [index] to:[value]',{
           style: {
@@ -601,7 +1047,8 @@ class OBhtml {
             // MI('Mouse Down','mouseDown'),
             MI('Focused','focused'),
             MI('Visible','visible'),
-            MI('Exists','exists')
+            MI('Exists','exists'),
+            MI('Checked','checked')
           ]
         },
         focusBlur: {
@@ -628,6 +1075,36 @@ class OBhtml {
             MI('Bottom','bottom'),
             MI('Right','right')
           ]
+        },
+        xy: {
+          acceptReporters: true,
+          items: [
+            MI('x','0'),
+            MI('y','1')
+          ]
+        },
+        view: {
+          acceptReporters: true,
+          items: [
+            MI('page','0'),
+            MI('screen','1')
+          ]
+        },
+        click: {
+          acceptReporters: true,
+          items: [
+            MI('clicked','0'),
+            MI('double clicked','1'),
+            MI('hovered','2')
+          ]
+        },
+        change: {
+          acceptReporters: true,
+          items: [
+            MI('Add','0'),
+            MI('Remove','1'),
+            // MI('replace','2')
+          ]
         }
       }
     };
@@ -635,7 +1112,7 @@ class OBhtml {
 // functions
 
   toggleLog(args) {
-  log = args.onOff;
+  this.log = args.onOff;
   }
 
   // HTML
@@ -643,19 +1120,21 @@ class OBhtml {
   insertHTML(args) {
     try {
       document.querySelectorAll(args.selector)[args.index - 1].insertAdjacentHTML(args.position,purify(args.html));
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   setInnerHTML(args) {
       try {
+    if (showRemoveBodyWarning(args.selector))
       document.querySelectorAll(args.selector)[args.index - 1].innerHTML = (purify(args.html));
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   setInnerHTMLAll(args) {
     try {
-    document.querySelectorAll(args.selector).forEach(e => {try {e.innerHTML = args.html;} catch (error) {if (log) console.error(error);}});
-    } catch (error) {if (log) console.error(error);}
+    if (showRemoveBodyWarning(args.selector))
+    document.querySelectorAll(args.selector).forEach(e => {try {e.innerHTML = purify(args.html);} catch (error) {if(this.log) console.error(error);}});
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   getInnerHTML(args) {
@@ -665,17 +1144,30 @@ class OBhtml {
     }
   }
 
-  removeHTML (args) {
-    let allow = true
-    if (args.selector.toLowerCase() == 'body' | args.selector.toLowerCase() == '#app' & !Scratch.vm.runtime.isPackaged) {
-      if (confirm(`Are you sure you wan't to Delete the element using the selector `+args.selector.toLowerCase()+`#[`+args.index+`]? (Whole page)\n\nThis will break mostly everything and you'll Have to reload.\n -- You will lose unsaved work!\n\nThis warning will not show when packaged`)) {
-        allow = true;
-      } else {
-        allow = false;
-      }
-    }
-    if (allow)
+  setOuterHTML(args) {
+      try {
+    if (showRemoveBodyWarning(args.selector))
+      document.querySelectorAll(args.selector)[args.index - 1].outerHTML = (purify(args.html));
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  setOuterHTMLAll(args) {
     try {
+    if (showRemoveBodyWarning(args.selector))
+    document.querySelectorAll(args.selector).forEach(e => {try {e.outerHTML = purify(args.html);} catch (error) {if(this.log) console.error(error);}});
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  getOuterHTML(args) {
+    try { return purify(document.querySelectorAll(args.selector)[args.index - 1].outerHTML);}
+    catch {
+    return '';
+    }
+  }
+
+  removeHTML (args) {
+    try {
+    if (showRemoveBodyWarning(args.selector))
       document.querySelectorAll(args.selector)[args.index - 1].remove();
     } catch (error) {
       console.error(error);
@@ -684,15 +1176,7 @@ class OBhtml {
 
   removeAllHTML (args) {
     try {
-        let allow = true
-    if (args.selector.toLowerCase() == 'body' | args.selector.toLowerCase() == '#app' & !Scratch.vm.runtime.isPackaged) {
-      if (confirm(`Are you sure you wan't to Delete ALL elements using the selector `+args.selector.toLowerCase()+`? (Whole page)\n\nThis will break mostly everything and you'll Have to reload.\n -- You will lose unsaved work!\n\nThis warning will not show when packaged`)) {
-        allow = true;
-      } else {
-        allow = false;
-      }
-    }
-    if (allow)  
+    if (showRemoveBodyWarning(args.selector))
     document.querySelectorAll(args.selector).forEach((element) => (element).remove());
     } catch (error) {
       console.error(error);
@@ -701,127 +1185,232 @@ class OBhtml {
 
   setAttribute(args) {
     try {
-      document.querySelectorAll(args.selector)[args.index - 1].setAttribute(args.attribute,purify(args.value));
+      document.querySelectorAll(args.selector)[args.index - 1].setAttribute(args.attribute,args.value);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   setAttributeAll(args) {
     try {
       document.querySelectorAll(args.selector).forEach((element) => (element).setAttribute(args.attribute,args.value));
-    } catch (error) {if (log) console.error(error)}
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  setAttributeJSON(args) {
+    try {
+      const attr = typeof args.json == 'string' ? JSON.parse(args.json) : args.json;
+      Object.keys(attr).forEach(a => {
+        try {
+          document.querySelectorAll(args.selector)[args.index - 1].setAttribute(a,attr[a]);
+        } catch (error) {if(this.log) console.error(error);}
+      });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  setAttributeAllJSON(args) {
+    try {
+      const attr = typeof args.json == 'string' ? JSON.parse(args.json) : args.json;
+      Object.keys(attr).forEach(a => {
+        try {
+          document.querySelectorAll(args.selector).forEach(e => {e.setAttribute(a,attr[a])});
+        } catch (error) {if(this.log) console.error(error);}
+      });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  // set
+
+  removeAttribute(args) {
+    try {
+      document.querySelectorAll(args.selector)[args.index - 1].removeAttribute(args.attribute)
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  removeAttributeAll(args) {
+    try {
+      document.querySelectorAll(args.selector).forEach(e => {
+        e.removeAttribute(args.attribute);
+      });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  // removeAllAttributes(args) {
+  //   try {
+  //   const element = document.querySelectorAll(args.selector)[args.index - 1];
+  //   const attr = getAllAttributes(element);
+  //   Object.keys(attr).forEach(a => {
+  //     element.removeAttribute(a);
+  //   });
+  //   } catch (error) {if(this.log) console.error(error);}
+  // }
+
+  // removeAllAttributesAll(args) {
+  //   try {
+  //   document.querySelectorAll(args.selector).forEach(element => {
+  //     const attr = getAllAttributes(element);
+  //     Object.keys(attr).forEach(a => {
+  //       element.removeAttribute(a);
+  //     });
+  //   });
+  //   } catch (error) {if(this.log) console.error(error);}
+  // }
+  
+  removeAttributeARRAY(args) {
+    try {
+      const attr = typeof args.json == 'string' ? JSON.parse(args.json) : args.json;
+      attr.forEach(a => {
+        try {
+          document.querySelectorAll(args.selector)[args.index - 1].removeAttribute(a);
+        } catch (error) {if(this.log) console.error(error);}
+      });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  removeAttributeAllARRAY(args) {
+    try {
+      const attr = typeof args.json == 'string' ? JSON.parse(args.json) : args.json;
+      attr.forEach(a => {
+        try {
+          document.querySelectorAll(args.selector).forEach(e => {e.removeAttribute(a)});
+        } catch (error) {if(this.log) console.error(error);}
+      });
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   getAttribute(args) {
     try { return purify(document.querySelectorAll(args.selector)[args.index - 1].getAttribute(args.attribute));}
     catch (error) {
-    return ''; if (log) console.error(error)
+    return ''; if(this.log) console.error(error);
     }
   }
 
+  getAttributeAll(args) {
+    try {
+      return getAllAttributes(document.querySelectorAll(args.selector)[args.index - 1]);
+    } catch (error) {return '{}'; if(this.log) console.error(error);}
+  }
+
+  getAttributeAllAll(args) {
+    try {
+    let out = [];
+    const elements = document.querySelectorAll(args.selector);
+    elements.forEach(e => {
+    out.push(getAllAttributes(e));
+    });
+    return makeString(out);
+    } catch (error) {return '[]'; if(this.log) console.error(error);}
+  }
+
+  getAttributeAllCertain(args) {
+    try {
+      let out = [];
+      const elements = document.querySelectorAll(args.selector);
+      elements.forEach(e => {
+      const attributes = JSON.parse(getAllAttributes(e));
+        if (attributes.hasOwnProperty(args.attribute)) {
+          out.push(attributes[args.attribute]);
+        }
+      });
+      return makeString(out);
+    } catch (error) {return '[]'; if (this.log) console.error(error);}
+  }
+
+  // classes
+
+  changeClass(args) {
+    try {
+    // check class if is native array or can be made into array, else split via comma.
+    const classes = !Array.isArray(JSON.parse(args.class)) ? typeof args.class == 'string' ? args.class.split(',') : args.class : Array.isArray(args.class) ? args.class : JSON.parse(args.class);
+    const element = document.querySelectorAll(args.selector)[args.index - 1];
+    console.log(classes)
+    classes.forEach(cl => {
+      if (args.change == '0') {
+      element.classList.add(cl);
+      } else if (args.change == '1') {
+      element.classList.remove(cl);
+      }
+      console.log(cl)
+      // else if (args.change == '2') {
+      // element.classList.replace()
+      // }
+    });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+  
+  // 👆 same as above ☝
+  changeClassAll(args) {
+    try {
+    const classes = !Array.isArray(JSON.parse(args.class)) ? typeof args.class == 'string' ? args.class.split(',') : args.class : Array.isArray(args.class) ? args.class : JSON.parse(args.class);
+    document.querySelectorAll(args.selector).forEach(element => {
+    classes.forEach(cl => {
+      if (args.change == '0') {
+      element.classList.add(cl);
+      } else if (args.change == '1') {
+      element.classList.remove(cl);
+      }
+      // else if (args.change == '2') {
+      // element.classList.replace()
+      // }
+    });});
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  getClassList(args) {
+    try {
+      const element = document.querySelectorAll(args.selector)[args.index - 1]
+      let out = []
+      element.classList.forEach(cl => {
+        out.push(cl);
+      });
+      return out;
+    } catch (error) {return [];if(this.log) console.error(error);} 
+  }
+
+  getClassListAll(args) {
+    try {
+      let fullout = [];
+      document.querySelectorAll(args.selector).forEach(element => {
+      let out = []
+      element.classList.forEach(cl => {
+        out.push(cl);
+        });
+      fullout.push(out);
+      });
+      return fullout;
+    } catch (error) {return []; if(this.log) console.error(error);}
+  }
+  
   countSelector(args) {
     try {
     return document.querySelectorAll(args.selector).length;
-    } catch (error) {return 0;if (log) console.error(error);} 
-  }
-
-  // CSS
-
-  setStyleSheet(args) {
-    const id = `OB-StyleSheets-`+args.id+``;
-    try {
-    document.querySelectorAll(`#`+id+``).forEach((element) => (element).remove());
-    } catch (error) {if (log) console.error(error);}
-    try {
-    document.head.insertAdjacentHTML('beforeend',`<style id="`+id+`">`+args.css+`</style>`);
-    this.styleSheets[args.id] = args.css;
-    } catch (error) {if (log) console.error(error);}
-  }
-
-  removeStyleSheet(args) {
-    const id = `#OB-StyleSheets-`+args.id+``;
-    try {
-      document.querySelectorAll(id).forEach((element) => (element).remove())
-      delete this.styleSheets[args.id];
-    } catch (error) {}
-  }
-
-  removeAllStyleSheets(args) {
-    const ids = Object.keys(this.styleSheets);
-    try {
-    ids.forEach(id => {
-      try {
-      document.querySelectorAll(`#OB-StyleSheets-`+id+``).forEach(obj => obj.remove());
-      delete this.styleSheets[id];
-    } catch {}
-    });
-    this.styleSheets = Object.create(null);
-    } catch (error) {if (log) console.error(error);}
-  }
-
-  getStyleSheets(args) {
-    try {
-       return Object.keys(this.styleSheets) ?? [];
-      } catch (error) {return '';if (log) console.error(error);}
-  }
-
-  getSpecificStyleSheet(args) {
-    try {
-      return purify(this.styleSheets[args.id]) ?? '';
-    } catch (error) {return ''; if (log) console.error(error);}
-  }
-
-  setStyle(args) {
-    try {
-      document.querySelectorAll(args.selector)[args.index - 1].style[args.style] = args.value;
-    } catch (error) {if (log) console.error(error)}
-  }
-
-  setStyleAll(args) {
-    try {
-      document.querySelectorAll(args.selector).forEach((element) => {
-      (element).style[args.style] = args.value;
-    });
-    } catch (error) {if (log) console.error(error);}
-  }
-
-  getStyle(args) {
-    try {
-    return document.querySelectorAll(args.selector)[args.index - 1].style[args.style];
-    } catch {
-      return '';
-    }
+    } catch (error) {return 0;if(this.log) console.error(error);} 
   }
 
   getValue(args) {
     try {
       return purify(document.querySelectorAll(args.selector)[args.index - 1].value);
     } catch (error) {
-      return ''; if (log) console.error(error);
+      return ''; if(this.log) console.error(error);
     }
   }
 
   setValue(args) {
     try {
+      if (document.querySelectorAll(args.selector)[args.index - 1]) {
       document.querySelectorAll(args.selector)[args.index - 1].value = args.value;
+      } else {if(this.log) console.error('Selector: "' + args.selector + '" #:' + args.index + ' does not exist.')}
     } catch {
-      if (log) console.error(error);
+      if(this.log) console.error(error);
     }
   }
 
   setValueAll(args) {
     try {
-      document.querySelectorAll(args.selector).forEach(e => {try {e.value = args.value;} catch (error) {if (log) console.error(error);}});
-    } catch (error) {if (log) console.error(error);}
-  }
-
-  checkImportance(args) {
-    try {
-    return document.querySelectorAll(args.selector)[args.index - 1].style[args.style].endsWith('!important');
-    } catch {
-      return false;
-    }
+      if (document.querySelectorAll(args.selector)) {
+      document.querySelectorAll(args.selector).forEach(e => {try {e.value = args.value;} catch (error) {if(this.log) console.error(error);}});
+      } else {console.error('No elements matching selector: "' + args.selector + '" exist.')}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   getStatus(args) {
@@ -842,7 +1431,10 @@ class OBhtml {
       if (args.status == 'exists') {
       return !!document.querySelectorAll(args.selector)[args.index - 1];
       }
-    } catch (error) {return false; if (log) console.error(error);}
+      if (args.status == 'checked') {
+      return e.checked;
+      }
+    } catch (error) {return false; if(this.log) console.error(error);}
   }
 
   getAnyStatus(args) {
@@ -867,12 +1459,58 @@ class OBhtml {
       if (args.status == 'exists') {
       if(!!(element)) {check++};
       }
+      if (args.status == 'checked') {
+      if ((element).checked) {check++};
+      }
       });
       return !!check > 0;
       } else {
       return false;
       }
-    } catch (error) {return false; if (log) console.error(error);}
+    } catch (error) {return false; if(this.log) console.error(error);}
+  }
+
+  elementDBLClickedStatus(args) {
+    try {
+      let out = null;
+      if (args.click == '0') {
+      out = mouse.click;
+      } else if (args.click == '1') {
+      out = mouse.dblClick;
+      } else if (args.click == '2'); {
+      out = mouse.hover;
+      }
+      out = out.getAttribute(args.attribute);
+      return out == null ? '' : out;
+    } catch (error) {return ''; if(this.log) console.error(error);};
+  }
+  
+  elementDBLClickedStatusAll(args) {
+    try {
+      if (args.click == '0') {
+      return getAllAttributes(mouse.click);
+      } else if (args.click == '1') {
+      return getAllAttributes(mouse.dblClick);
+      } else if (args.click == '2') {
+      return getAllAttributes(mouse.hover); 
+      }
+    } catch (error) {return {}; if (this.log) console.error(error);}
+  }
+
+  matches(args) {
+    try {
+      return !!document.querySelectorAll(args.selector)[args.index - 1].matches(args.selectorQuery);
+    } catch (error) {return 'false'; if(this.log) console.error(error);}
+  }
+
+  // TODO
+  // This should use for instead, I just don't feel like it rn...
+  matchesAny(args) {
+    try {
+      let matches = 0;
+      document.querySelectorAll(args.selector).forEach(e => {if (e.matches(args.selectorQuery)) matches ++});
+      return !!matches > 0;
+    } catch (error) {return 'false'; if(this.log) console.error(error);}
   }
 
   focusBlur(args) {
@@ -883,14 +1521,14 @@ class OBhtml {
       } else {
       e.blur();
       }
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   showHide(args) {
     try {
       const e = document.querySelectorAll(args.selector)[args.index - 1]; 
       e.hidden = args.type == 'hide';
-    } catch (error) {if(log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   showHideAll(args) {
@@ -898,13 +1536,13 @@ class OBhtml {
       const bool = args.type == 'hide';
       const e = document.querySelectorAll(args.selector);
       e.forEach(e => {e.hidden = bool;});
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   clickElement(args) {
     try {
       document.querySelectorAll(args.selector)[args.index - 1].click();
-    } catch (error) {if(log) console.error(error)}
+    } catch (error) {if(this.log) console.error(error)}
   }
 
   getElementInfo(args) {
@@ -919,13 +1557,34 @@ class OBhtml {
       if (args.info == 'bottom') {return eb.bottom;} else
       if (args.info == 'right') {return eb.right;}
       } else {return '0';}
-    } catch (error) {return ''; if(log) console.error(error)}
+    } catch (error) {return ''; if(this.log) console.error(error)}
   }
 
   getMouseDown() {
     try {
       return !!document.querySelector('html').matches(':hover:active');
-    } catch (error) {return false; if(log) console.error(error);}
+    } catch (error) {return false; if(this.log) console.error(error);}
+  }
+
+  getMouseData(args) {
+    try {
+      if (args.value == 0) {
+        return mouse.page.x;
+      } else {
+        return mouse.page.y;
+      }
+    } catch (error) {return '0'; if(this.log) console.error(error);}
+  }
+
+  getMouseDataElement(args) {
+    try {
+      const element = document.querySelectorAll(args.selector)[args.index - 1].getBoundingClientRect();
+      if (args.value == '0') {
+      return clamp(map(mouse.page.x,element.left,element.left + element.width,0,element.width),0,element.width);
+      } else {
+      return clamp(map(mouse.page.y,element.top,element.top + element.height,0,element.height),0,element.height);
+      }
+    } catch (error) {return '0'; if (this.log) console.error(error);}
   }
 
   sanitize(args) {
@@ -935,25 +1594,122 @@ class OBhtml {
   setTitle(args) {
     try {
       document.title = args.title;
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   getTitle() {
     return document.title;
   }
 
+  getOGTitle() {
+    return ogTitle;
+  }
+
   setIcon(args) {
     try {
       changeFavicon(args.url);
-    } catch (error) {if (log) console.error(error);}
+    } catch (error) {if(this.log) console.error(error);}
   }
 
   getIcon() {
     try {
       const icon = document.head.querySelector('#dynamic-favicon').href;
       return !!icon ? icon : '';
-    } catch (error) {return ''; if (log) console.error(error)}
+    } catch (error) {return ''; if(this.log) console.error(error)}
   }
+
+  // CSS
+
+  setStyleSheet(args) {
+    const id = `OB-StyleSheets-`+args.id+``;
+    try {
+    document.querySelectorAll(`#`+id+``).forEach((element) => (element).remove());
+    } catch (error) {if(this.log) console.error(error);}
+    try {
+    document.head.insertAdjacentHTML('beforeend',`<style id="`+id+`">`+args.css+`</style>`);
+    this.styleSheets[args.id] = args.css;
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  removeStyleSheet(args) {
+    const id = `#OB-StyleSheets-`+args.id+``;
+    try {
+      document.querySelectorAll(id).forEach((element) => (element).remove())
+      delete this.styleSheets[args.id];
+    } catch (error) {}
+  }
+
+  removeAllStyleSheets(args) {
+    const ids = Object.keys(this.styleSheets);
+    try {
+    ids.forEach(id => {
+      try {
+      document.querySelectorAll(`#OB-StyleSheets-`+id+``).forEach(obj => obj.remove());
+      delete this.styleSheets[id];
+    } catch {}
+    });
+    this.styleSheets = Object.create(null);
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  getStyleSheets(args) {
+    try {
+       return makeString(Object.keys(this.styleSheets)) ?? '[]';
+      } catch (error) {return '';if(this.log) console.error(error);}
+  }
+
+  importStyleSheets(args) {
+    try {
+      if (args.input == '' | args.input == null | args.input == '{}' & !vm.runtime.isPackaged & !confirm.importStyleSheets ? confirm.importStyleSheets = window.confirm('Importing StyleSheets from an empty string\nwill erase all currently stored styles.\n\nThis warning will not show while packaged.\n\nDo you wish to procced?') : true)
+      this.styleSheets = JSON.parse(args.input);
+    } catch (error) {if (this.log) console.error(error);}
+  }
+
+  exportStyleSheets() {
+    try {
+      return makeString(this.styleSheets);
+    } catch (error) {return '{}'; if (this.log) console.error(error);}
+  }
+
+  getSpecificStyleSheet(args) {
+    try {
+      return purify(this.styleSheets[args.id]) ?? '';
+    } catch (error) {return ''; if(this.log) console.error(error);}
+  }
+
+  setStyle(args) {
+    try {
+      document.querySelectorAll(args.selector)[args.index - 1].style[args.style] = args.value;
+    } catch (error) {if(this.log) console.error(error)}
+  }
+
+  setStyleAll(args) {
+    try {
+      document.querySelectorAll(args.selector).forEach((element) => {
+      (element).style[args.style] = args.value;
+    });
+    } catch (error) {if(this.log) console.error(error);}
+  }
+
+  getStyle(args) {
+    try {
+    return document.querySelectorAll(args.selector)[args.index - 1].style[args.style];
+    } catch {
+      return '';
+    }
+  }
+
+  checkImportance(args) {
+    try {
+    return !!document.querySelectorAll(args.selector)[args.index - 1].style[args.style].trim().endsWith('!important');
+    } catch (error) {
+      return 'false';
+      if(this.log) 
+        console.error(error);
+    }
+  }
+
+
 
   // Buttons
 
@@ -965,6 +1721,10 @@ class OBhtml {
   alert(`This extension uses selectors to get elements from the page.\n\nIt also adds [Scratch="canvas"] to the app canvas so you can confidentally select it.\n\nIf you are unsure what selectors are, you should probably look it up first.\n\nIf you're offline or lazy you can reference this:\n\n".className" references an element's class\n"#Id" it's id\nand you can also reference it's tag directly: \n"div" = "<div></div>"\n\n You can reference attributes like: [attribute] or [attribute="value"].\n\nPlease use responsibly. (:`)
   }
 
+  SanitizeNote() {
+  alert(`Note - All blocks that insert html are already sanitized.\nThe sanitize block is meant to clean html for other extensions that may use it.\n\nSuch as the marked.js extension: "markedInTurbowarp.js"\nUsing marked.js it takes markdown and outpus html.\n\nhttps://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/markedInTurbowarp.js`)
+  }
+
   ApacheLicence() {
   Scratch.openWindow('https://raw.githubusercontent.com/cure53/DOMPurify/refs/heads/main/LICENSE');
   }
@@ -974,7 +1734,7 @@ class OBhtml {
   // CC Attribution 3.0 Unported
   CC3AU() {
   try {
-    if (confirm(`CC Attribution 3.0 Unported\n\nPress ok to go to: CC Attribution 3.0 Unported\nhttps://creativecommons.org/licenses/by/3.0\n\nPress Cancel to go to: Plain Text\nhttps://creativecommons.org/licenses/by/3.0/legalcode.txt`)) {
+    if (window.confirm(`CC Attribution 3.0 Unported\n\nPress ok to go to: CC Attribution 3.0 Unported\nhttps://creativecommons.org/licenses/by/3.0\n\nPress Cancel to go to: Plain Text\nhttps://creativecommons.org/licenses/by/3.0/legalcode.txt`)) {
     Scratch.openWindow('https://creativecommons.org/licenses/by/3.0');
     } else {
     Scratch.openWindow('https://creativecommons.org/licenses/by/3.0/legalcode.txt')
