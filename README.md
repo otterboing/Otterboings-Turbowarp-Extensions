@@ -44,7 +44,7 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
 - [Extra Array <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#extra-array)
 - [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html-)
-- [Marked In Turbowarp <img title="NEW!" width="24px" height="24px" src="Extra%20Files/New!.png">](#marked-in-turbowarp)
+- [Marked In Turbowarp <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#marked-in-turbowarp-)
 
 ---
 
