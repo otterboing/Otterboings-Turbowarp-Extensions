@@ -145,7 +145,7 @@ Advanced:
 - Parse into JS object: `Parse: [JSON or array] into JS object` "Returns a JS object parsed from the input."
 - Stringify JS Object: `Stringify JS object: [JSON or array]` "Returns JSON or array as a string from an input JS object."
 
-### Marked In Turbowarp <img title="NEW!" alt="NEW!" width="24px" height="24px" src="Extra%20Files/New!.png">
+### Marked In Turbowarp <img title="NEW!" alt="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">
 [Marked In Turbowarp](Extensions/markedInTurbowarp.js) see [Marked.js](https://marked.js.org)
 
 Parse markdown into html!
