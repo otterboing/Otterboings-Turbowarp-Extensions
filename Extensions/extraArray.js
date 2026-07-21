@@ -134,7 +134,7 @@ class OBExtraArray {
             defaultValue: 'Hello'
           }
         }),
-        makeBlock('insertAtIndex',Scratch.BlockType.REPORTER,'For array: [array] at index: [position] Insert: [text]', {
+        makeBlock('insertAtIndex',Scratch.BlockType.REPORTER,'For array: [array] at index: [position] insert: [text]', {
           array: {
             type: Scratch.ArgumentType.STRING,
             defaultValue: '[" World!","!"]'
@@ -189,7 +189,7 @@ class OBExtraArray {
             defaultValue: '{"list":["Convert","Me","!"]}'
           }
         }),
-        makeBlock('stringifyObject',Scratch.BlockType.REPORTER,'Stringify js object: [object]',{
+        makeBlock('stringifyObject',Scratch.BlockType.REPORTER,'Stringify JS object: [object]',{
           object: {
             type: Scratch.ArgumentType.STRING,
             defaultValue: '{"your object": "here"}'
