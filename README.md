@@ -138,6 +138,7 @@ Some Misc Tools For Handling Arrays!
 - For Array Insert At Start/End: `For array: [array] at: [start,end] insert: [string]` "For each item in the array insert a string at the start or end."
 - For Array Insert At Index: `For array: [array] at index:[index] insert: [string]` "For each item in the array insert a string at the index in the item's characters."
 - Count Occurrences: `# of [query] in [array]` "Return the number of occurrences of a certain query in an array."
+- Random Number Array: `Array of [number] numbers ranging: [min] to [max] ['Not rounding','Rounding']`
 - Pop: `Pop: [array]` "Removes the last item in an array Or the last character of a string."
 
 Advanced:
