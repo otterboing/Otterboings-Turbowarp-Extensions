@@ -19,6 +19,11 @@ function getColor(color,num = 1) {
   if (color == null | color == '') {return eval(`color`+num+`Def`);} else {return color;}
 }
 
+    const BT = Scratch.BlockType;
+    const AT = Scratch.ArgumentType;
+    const bt = BT;
+    const at = AT;
+
 function label(name) {return {blockType: 'label', text: name};}
 
 function MI(text,value) {return {text: text, value: value}}
@@ -40,7 +45,7 @@ function makeBlock(opcode,type,text,args,extra,icon,hide,color1,color2,color3) {
   return block;
 }
 
-function ARG(name,type,defaultValue) {return ``+name+`: {type: `+type+`, defaultValue: `+defaultValue+`}`}
+function ARG(type,defaultValue,menu) {return {type: type, defaultValue: defaultValue, menu: menu};};
 
 // Use this from now on!
 function checkType(object) {
@@ -177,6 +182,12 @@ class OBExtraArray {
             }
           }
         },
+        makeBlock('randomNumberArray',BT.REPORTER,'Array of [num] random numbers ranging: [min] to: [max] [rounding]',{
+          num: ARG(AT.NUMBER,3),
+          min: ARG(AT.NUMBER,0),
+          max: ARG(AT.NUMBER,25),
+          rounding: ARG(AT.STRING,'Not rounding','rounding')
+        }),
         label('Advanced'),
         {
           blockType: Scratch.BlockType.BUTTON,
@@ -201,6 +212,13 @@ class OBExtraArray {
         position: {
           acceptReporters: true,
           items: [MI('start','start'),MI('end','end')]
+        },
+        rounding: {
+          acceptReporters: true,
+          items: [
+            MI('Not rounding','Not rounding'),
+            MI('Rounding','Rounding')
+          ]
         }
       }
     };
@@ -249,7 +267,7 @@ class OBExtraArray {
     const loopCount = arrayLength - args.number; 
     if (Array.isArray(inArray)) {
       let num = args.number;
-       for (let i = 0; i <= loopCount; i++) {
+      for (let i = 0; i <= loopCount; i++) {
         inArray.splice(num, 0, args.input);
         num = num + args.number + 1;  
       };
@@ -315,9 +333,23 @@ class OBExtraArray {
       return num;
     }
   } catch (error) {
-  // Should this return an empty string instead?
-  return 0; console.error(error);
+      // Should this return an empty string instead?
+      console.error(error); return 0;
+    }
   }
+
+  randomNumberArray(args) {
+    const array = [];
+    if (args.rounding == 'Not rounding') {
+      for (let i = 0; i < args.num; i++) {
+        array.push(Math.random() * (args.max - args.min) + args.min);
+      }
+    } else {
+      for (let i = 0; i < args.num; i++) {
+        array.push(Math.round(Math.random() * (args.max - args.min) + args.min));
+      }
+    }
+    return JSON.stringify(array);
   }
 
   // This also works with strings... Just badly!
