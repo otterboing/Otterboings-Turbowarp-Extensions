@@ -97,10 +97,8 @@
                 id: ID,
                 name: NAME,
                 menuIconURI: icon,
-                color1: "#ff695e",
-                color2: "#bd3e35",
                 blocks: [
-                    makeButton('Info', 'Info'),
+                    makeButton('Info | WARNING', 'Info'),
                     makeButton('Check out my HTML extension!','shamelessPlug'),
                     makeBlock('evalCommand', BT.COMMAND, 'Eval:[eval]', {
                         eval: ARG(AT.STRING,'alert("Be careful! No user inputs!");')
@@ -119,7 +117,7 @@
         }
 
         Info() {
-            alert(`  MIT License\n\nEval is seen as a great evil among the JS community, just look up why it's bad and decide if you want to/can use it in your own project.\n\n Use with caution.\n\n\nAs a safer alternative I'd recommend making your own extensions for whatever project you may be doing.\nI have an extension base to get you started if you've never made one before:\n\nhttps://github.com/otterboing/Advanced-Base-Turbowarp-Extension`)
+            alert(`  MIT License\n\nEval is seen as a great evil among the JS community, just look up why it's bad and decide if you want to/can use it in your own project.\n\n Use with caution, if used incorrectly this extension can be used for Remote Code Execution attacks.\n\nMAKE SURE NO INPUT THAT TOUCHS A SERVER OR LOADED FILE IS USED IN THESE BLOCKS.\n\n\nAs a safer alternative I'd recommend making your own extensions for whatever project you may be doing.\nI have an extension base to get you started if you've never made one before:\n\nhttps://github.com/otterboing/Advanced-Base-Turbowarp-Extension\n\nI am at no fault should this extension be used incorrectly.`)
         }
 
         shamelessPlug() {
