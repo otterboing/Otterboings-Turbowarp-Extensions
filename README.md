@@ -43,8 +43,9 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 - [Colorful Comments!](#colorful-comments)
 - [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
 - [Extra Array <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#extra-array)
-- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html-)
-- [Marked In Turbowarp <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#marked-in-turbowarp-)
+- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#html-)
+- [Marked In Turbowarp](#marked-in-turbowarp-)
+- [More Joins <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](Extensions/more-joins.js)
 
 ---
 
@@ -146,7 +147,7 @@ Advanced:
 - Parse into JS object: `Parse: [JSON or array] into JS object` "Returns a JS object parsed from the input."
 - Stringify JS Object: `Stringify JS object: [JSON or array]` "Returns JSON or array as a string from an input JS object."
 
-### Marked In Turbowarp <img title="NEW!" alt="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">
+### Marked In Turbowarp
 [Marked In Turbowarp](Extensions/markedInTurbowarp.js) see [Marked.js](https://marked.js.org)
 
 Parse markdown into html!
@@ -158,7 +159,14 @@ Uses https://marked.js.org https://github.com/markedjs/marked
 - Parse: `Parse: [markdown]`
 - Parse Inline: `Parse inline: [markdown]`
 
-### HTML <img title="NEW!" alt="NEW!" width="24px" src="Extra%20Files/NEW!.png">
+### More Joins <img title="NEW!" alt="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">
+[More Joins](Extensions/more-joins.js)
+
+Just adds some more join blocks.
+
+They get up to like 6 inputs it's crazy I swear!
+
+### HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">
 [HTML](extensions/HTML.js)
 
 Add, remove, modify and style elements on the page based on selectors!
