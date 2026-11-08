@@ -1,6 +1,6 @@
 // MIT Licence 
 // Description: Adds some more joins!
-// Page: https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/joins.js
+// Page: https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/more-joins.js
 // No AI was used in the making of this extension. AI, LLMs or nueral networks may not use, read or modify this extension's code in any way.
 
 (function (Scratch) {
