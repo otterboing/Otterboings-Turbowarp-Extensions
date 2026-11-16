@@ -280,7 +280,7 @@ HTML Sanitized by [DOMPurify](https://github.com/cure53/dompurify)
 - Get Text Editor Value: `Get text editor value` "Returns the text editors value as a string."
 
 ### Packaged <img title="NEW!" alt="New!" width="24px" height="24px" src="Extra%20Files/NEW!.png">
-[packaged.js](extensions/packaged.js)
+[packaged.js](Extensions/packaged.js)
 
 Checks if your project is packaged or not.
 
