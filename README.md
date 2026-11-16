@@ -37,6 +37,7 @@ Extensions must be run without the Sandbox enabled. If it is, extensions will be
 - [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html-)
 - [Marked In Turbowarp](#marked-in-turbowarp)
 - [More Joins <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#more-joins-)
+- [Packaged](#packaged-)
 
 ---
 
@@ -277,6 +278,15 @@ HTML Sanitized by [DOMPurify](https://github.com/cure53/dompurify)
 - Close Text Editor: `Close text editor` "Closes the text editor."
 - Set Text Editor Value: `Set text editor value to: [value]` "Sets the text editors value to given value."
 - Get Text Editor Value: `Get text editor value` "Returns the text editors value as a string."
+
+### Packaged <img title="NEW!" alt="New!" width="24px" height="24px" src="Extra%20Files/NEW!.png">
+[packaged.js](extensions/packaged.js)
+
+Checks if your project is packaged or not.
+
+#### Blocks:
+
+- Packaged?: `Packaged?` "Checks if your project is packaged or not. 🦐"
 
 ---
 ---
