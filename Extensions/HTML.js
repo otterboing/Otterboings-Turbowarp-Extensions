@@ -27,12 +27,43 @@ if (!Scratch.extensions.unsandboxed) throw new Error("OBhtml Must Be Run Un-Sand
 
 function purify(html) {
   try {return DOMPurify.sanitize(html);}
-  catch {return html;}
+  catch (error) {console.error(error); return html;}
+}
+
+function purifyCSS(html) {
+  try {return DOMPurify.sanitize(html,{FORCE_BODY:true,ALLOWED_TAGS:['style'],ALLOWED_ATTR:['style','id']});}
+  catch (error) {console.error(error); return '';};
 }
 //
 
-const ver = '1.3.1';
-// > Added Online Warning.
+const ver = '1.5.0';
+
+// Added:
+//
+// > Blocks to open, close, and get/set the value of the new text editor.
+// >> New way to purify CSS.
+// >>> Shorthands for blockTypes, attributeTypes and Breaks.
+// >>>> A block to get a specific style from all matching a selector as an array.
+//
+// Fixed:
+//
+// > Various blocks returning a js object instead of a string.
+// >> CSS stylesheets being created with invalid ids, making them impossible to delete with the given blocks.
+// >>> CSS stylesheets being created without being sanitized. (oops)
+// >>>> Spelling mistakes in notes.
+// >>>>> Checking whether a selector is checked or not, returning nothing if the element doesn't exist.
+// >>>>>> Functions using slow makeString function instead of JSON.stringify().
+// >>>>>>> Updated ARG function to use my current implementation.
+//
+// Planned:
+//
+// > Add new QL blocks.
+// >> Add a way to store, delete and edit JS elements directly.
+// >>> Maybe add a way to turn on and off using script attributes. (Idk bout this one though.)
+// >>>> Update all blocks to use the newer makeBlock function.
+// >>>>> Fix the color definitions to be easier to use.
+
+// --------------
 
 // Licence of HTML5 and CSS3 logos: Creative Commons Attribution 3.0 Unported <https://creativecommons.org/licenses/by/3.0/>
 // icon and cssIcon attributed to the W3C. <https://www.w3.org/>
@@ -45,7 +76,7 @@ const color3Def = '#e44d26';
 //
 // Allows for choosing the selector [Scratch="canvas"] to get the correct canvas.
 const canvas = Scratch.vm.renderer.canvas;
-canvas.setAttribute('Scratch','canvas')
+canvas.setAttribute('Scratch','canvas');
 canvas.classList.add('sc-Canvas');
 canvas.setAttribute('sc-Canvas','true');
 
@@ -81,7 +112,13 @@ function makeButton(text,func) {
   }
 }
 
-function ARG(name,type,defaultValue) {return ``+name+`: {type: `+type+`, defaultValue: `+defaultValue+`}`}
+  const BT = Scratch.BlockType;
+  const AT = Scratch.ArgumentType;
+  const bt = BT;
+  const at = AT;
+  const BR = '---';
+
+  function ARG(type,defaultValue,menu) {return {type: type, defaultValue: defaultValue, menu: menu};};
 
 const ogTitle = document.title;
 
@@ -93,6 +130,34 @@ const mouse = {
   hover: null,
   other: {}
 } 
+
+document.querySelectorAll('#OBHTML-scriptEditor').forEach(e => {e.remove();});
+openScriptEditor = function () {
+	const scriptEditor = document.querySelector('#OBHTML-scriptEditor');
+	if (!!document.querySelector('#OBHTML-scriptEditor')) {
+		scriptEditor.setAttribute('obhidden',!scriptEditor.getAttribute('obhidden'));
+		if (scriptEditor.getAttribute('obhidden') != true) {
+			document.querySelector('#OBHTML-scriptEditor .OBHTML-editor textarea#OBHTML-editor').focus();
+			
+		} else {
+			document.querySelector('#OBHTML-scriptEditor .OBHTML-editor textarea#OBHTML-editor').blur();
+		}
+	} else {
+	const html = `<div id="OBHTML-scriptEditor" obhidden="false"><style>button.OBHTML-scriptEditor-BTN {transition: filter 0.25s;min-width: 2.5rem;height: 2.5rem;background-color: rgba(0,0,0,0.50);background: linear-gradient(2.5deg,rgba(25,0,0,0.50) 0%, rgba(175.500,0.00,0.00,0.50) 100%);border: 1px solid white;border-top: 1px solid rgba(75,75,75);border-bottom: 1px solid #151515;border-left: 1px solid rgb(50,50,50);border-right: 1px solid rgb(50,50,50);border-radius: 0.350rem;display: flex;flex-direction: row;justify-content: center;align-items: center;filter: saturate(0) brightness(1) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));backdrop-filter: blur(8px);}#OBHTML button:not(:not(:hover,:focus)), button.OBHTML-scriptEditor-BTN:not(:not(:hover,:Focus)) {transition: filter 0.01s;filter: saturate(0) brightness(1.25) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));}#OBHTML button#openScriptEditor {font-size: 1rem;}#OBHTML-scriptEditor {z-index: 9999;position: absolute;width: 100%;height: 100%;background: linear-gradient(0deg,rgba(0,0,0,0.5),rgba(100,100,100,0.5));backdrop-filter: blur(8px);display: flex;flex-direction: column;justify-content: center;align-items: center;}#OBHTML-scriptEditor .OBHTML-editor {width: 95%;height: 89%;padding: 1rem;background-color: rgba(0,0,0,0.25);border: 1px solid rgba(255,255,255,0.25);border-radius: 0.41rem;display: flex;flex-direction: column;justify-content: start;align-items: center;}#OBHTML-scriptEditor .OBHTML-editor textarea#OBHTML-editor {transition: border 0.25s, outline 0.25s; width: 99%;height: 99%;padding: 0.5rem;background-color: black;border: 1px solid rgba(255,255,255,0.25); outline: 0px solid transparent;resize: none;white-space: pre;overflow-wrap: normal;overflow-x: auto;font-family: monospace;}#OBHTML-scriptEditor .OBHTML-editor textarea#OBHTML-editor:focus {border: 1px solid rgba(253, 76, 76,1);outline: 4px solid rgba(253,76,76,0.5);}#OBHTML button, #OBHTML-scriptEditor .OBHTML-editor button#OBHTML-scriptEditor-exitBTN {transition: filter 0.25s;min-width: 2.5rem;height: 2.5rem;background-color: rgba(0,0,0,0.50);background: linear-gradient(2.5deg,rgba(25,0,0,0.50) 0%, rgba(175.500,0.00,0.00,0.50) 100%);border: 1px solid white;border-color: rgba(75,75,75) rgb(50,50,50) #151515 rgb(50,50,50);border-radius: 0.350rem;display: flex;flex-direction: row;justify-content: center;align-items: center;filter: saturate(0) brightness(1) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));backdrop-filter: blur(8px);}#OBHTML button:not(:not(:hover,:focus)), #OBHTML-scriptEditor .OBHTML-editor button#OBHTML-scriptEditor-exitBTN:not(:not(:hover,:focus)) {transition: filter 0.01s;filter: saturate(0) brightness(1.25) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));}#OBHTML button#quickExtension {background: #FF4C4C; opacity: 1;filter: saturate(1) brightness(1) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));font-size: 1rem;}#OBHTML button#quickExtension:not(:not(:hover,:focus)) {transition: filter 0.01s;filter: saturate(1) brightness(1.25) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));}#OBHTML button#openScriptEditor {font-size: 1rem;}#OBHTML-scriptEditor-btnContainer {width: 95%; height: 2rem; padding: 0.5rem; display: flex; gap: 0.25rem;flex-direction: row}#OBHTML-scriptEditor-btnContainer button {min-width: 2rem; height: 2rem;}#OBHTML-scriptEditor-BTN-closeEditor {transition: filter 0.25s, transform 0.25s;background-color: transparent;background: linear-gradient(2.5deg,rgba(100,25,25,1) 0%,rgba(245,100,100,1) 100%);filter: saturate(1) brightness(1) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));}#OBHTML-scriptEditor-BTN-closeEditor:not(:not(:hover,:focus)) {transition: filter 0.01s, transform 0.05s;transform: translateY(-1px);background: linear-gradient(2.5deg,rgba(100,25,25,1) 0%,rgba(245,100,100,1) 100%);border-color: rgba(200,100,100,1) rgba(150,55,55,1) rgba(120,50,50,1) rgba(150,55,55,1)!important;filter: saturate(1) brightness(1.5) drop-shadow(1px 4px 2px rgba(0,0,0,0.25));}[obhidden="true"] {display: none!important; pointer-events: none; user-select: none; -webkit-user-select: none; -moz-user-select: none;}@keyframes OBHTML-popup {0% {scale: 0;opacity: 0;}100% {scale: 1;opacity: 1;}}@keyframes OBHTML-popup-no-scale {0% {opacity: 0;}100% {opacity: 1;}}#OBHTML-scriptEditor:not([obhidded="true"]) .OBHTML-editor,#OBHTML-scriptEditor:not([obhidden="true"]) {animation: OBHTML-popup-no-scale 0.05s forwards ease;}#OBHTML-scriptEditor:not([obhidden="true"]) :not(:not(.OBHTML-scriptEditor-BTN,[title="BingBong"])) {scale: 0;opacity: 0;animation: OBHTML-popup 0.15s forwards ease;animation-delay: 0.05s;}</style><div id="OBHTML-scriptEditor-btnContainer"><button class="OBHTML-scriptEditor-BTN" id="OBHTML-scriptEditor-BTN-closeEditor" title="Close editor [Esc]" onclick="document.querySelector('#OBHTML-scriptEditor').setAttribute('obhidden',true);">X</button><button class="OBHTML-scriptEditor-BTN" title="Copy text" onclick="window.navigator.clipboard.writeText(document.querySelector('#OBHTML-editor').value);">Copy</button><button class="OBHTML-scriptEditor-BTN" title="Clear text" onclick="document.querySelector('#OBHTML-editor').value = '';">Clear</button><img title="BingBong" src="https://c.tenor.com/xzUBceNkooEAAAAC/tenor.gif" style="width: 2rem; height: 2rem; <-- pointer-events: none; user-drag: none; -webkit-user-drag: none; -moz-user-drag: -moz-none; user-select: none; -->"></div><div class="OBHTML-editor"><textarea id="OBHTML-editor" spellcheck="false"></textarea></div></div>`;
+	document.body.insertAdjacentHTML('beforeend', html);document.querySelector('#OBHTML-scriptEditor .OBHTML-editor textarea#OBHTML-editor').focus();
+  document.addEventListener('keydown', function (event) {
+    if (event.key == 'Escape') {
+      if (document.querySelector('#OBHTML-scriptEditor').getAttribute('obhidden') != true) {
+        document.querySelector('#OBHTML-scriptEditor').setAttribute('obhidden',true);
+      }
+    }
+  });
+  }
+}
+
+function closeScriptEditor() {
+  document.querySelector('#OBHTML-scriptEditor').setAttribute('obhidden',true);
+}
 
 // Some utils.
 function getGreater(input1,input2) {
@@ -124,18 +189,32 @@ if (value < min) {
 return out;
 }
 
-function equalsAny(string,array) {
+function includesArray(string,array) {
   try { 
     if (Array.isArray(array)) {
       let matches = 0;
-      for (let i = 0; i < array.length | matches < 1; i++) {
-        string == array[i];
+      for (let i = 0; i < array.length & matches < 1; i++) {
+        if (string == array[i]){
+          matches++;
+        }
       };
       return matches > 0;
     } else {
       return false;
     }
   } catch (error) {console.error(error);}
+}
+
+function getSafeId(inId) {
+    const id_list = [];
+    (``+inId).split('').forEach(c => {
+      if (includesArray(c,id_whitelist_characters) == true) {
+        id_list.push(c);
+      } else {
+        id_list.push((''+c).charCodeAt(0));
+      }
+    });
+    return id_list.join('');
 }
 
 function getElementFootprint(e) {
@@ -151,17 +230,9 @@ function getAllAttributes(e) {
   // Source - https://stackoverflow.com/a/57640258
   // Posted by Djaouad, modified by community. See post 'Timeline' for change history
   // Retrieved 2026-07-01, License - CC BY-SA 4.0
-  return makeString(Object.fromEntries(Array.from(e.attributes).map((a) => [a.nodeName, a.value])));
+  return JSON.stringify(Object.fromEntries(Array.from(e.attributes).map((a) => [a.nodeName, a.value])));
   } else {
   return '{}';
-  }
-}
-
-function makeString(json) {
-  if (typeof json == 'object') {
-  return JSON.stringify(json)
-  } else {
-  return json;
   }
 }
 
@@ -181,15 +252,15 @@ function makeString(json) {
 document.head = document.head || document.getElementsByTagName('head')[0];
 
 function changeFavicon(src) {
- var link = document.createElement('link'),
-     oldLink = document.getElementById('dynamic-favicon');
- link.id = 'dynamic-favicon';
- link.rel = 'shortcut icon';
- link.href = src;
- if (oldLink) {
+  var link = document.createElement('link'),
+    oldLink = document.getElementById('dynamic-favicon');
+  link.id = 'dynamic-favicon';
+  link.rel = 'shortcut icon';
+  link.href = src;
+  if (oldLink) {
   document.head.removeChild(oldLink);
- }
- document.head.appendChild(link);
+  }
+  document.head.appendChild(link);
 }
 //
 //
@@ -219,6 +290,8 @@ function showRemoveBodyWarning(selector) {
 
 
 //
+    
+const id_whitelist_characters = ['-',0,1,2,3,4,5,6,7,8,9,'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
 
 class OBhtml {
 
@@ -271,739 +344,756 @@ class OBhtml {
       menuIconURI: icon,
       blocks: [
         {
-          blockType: Scratch.BlockType.BUTTON,
+          blockType: BT.BUTTON,
           text: 'Info',
           func: 'Info'
         },
         {
-          blockType: Scratch.BlockType.BUTTON,
+          blockType: BT.BUTTON,
           text: 'Selectors',
           func: 'Selectors'
         },
-        // licence
-        '---',
-        {
-          blockType: Scratch.BlockType.BUTTON,
-          text: 'Apache Licence',
-          func: 'ApacheLicence'
-        },
-        {
-          blockType: Scratch.BlockType.BUTTON,
-          text: 'Mozilla Public Licence',
-          func: 'MozillaPublicLicence'
-        },
-        {
-          blockType: Scratch.BlockType.BUTTON,
-          text: 'CC Attribution 3.0 Unported',
-          func: 'CC3AU'
-        },
-        // End licence
         makeButton('Online Warning!','onlineWarning'),
         label('HTML'),
         {
           opcode: 'toggleLog',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Turn Logging [onOff]',
           hideFromPalette: true,
           arguments: {
             onOff: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'onOff'
             }
           }
         },
         {
           opcode: 'insertHTML',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Insert html: [html] in [selector] #:[index] at: [position] ',
           arguments: {
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '[Scratch="canvas"]'
             },
             position: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'positions',
             },
             html: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '<span id="span1" style="position: absolute;">Hello World!</span>'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
           }
         },
         {
           opcode: 'removeHTML',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Remove selector:[selector] #:[index] from page',
           arguments: {
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
           } 
         },
         {
           opcode: 'removeAllHTML',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Remove all matching selector:[selector] from page',
           hideFromPalette: false,
           arguments: {
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             }
           } 
         },
-        makeBlock('countSelector',Scratch.BlockType.REPORTER,'Count [selector]',{
+        makeBlock('countSelector',BT.REPORTER,'Count [selector]',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           }
         }),
-        '---',
+        BR,
         {
           opcode: 'setInnerHTML',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Set inner html of: [selector] #:[index] to: [html] ',
           arguments: {
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             html: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'Hello!'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
           }
         },
-        makeBlock('setInnerHTMLAll',Scratch.BlockType.COMMAND,'Set inner html of all matching selector: [selector] to: [html]',{
+        makeBlock('setInnerHTMLAll',BT.COMMAND,'Set inner html of all matching selector: [selector] to: [html]',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             html: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'Hello!'
             },
         }),
         {
             opcode: 'getInnerHTML',
-            blockType: Scratch.BlockType.REPORTER,
+            blockType: BT.REPORTER,
             allowDropAnywhere: true,
             text: 'Get inner html from selector: [selector] #:[index]',
             arguments: {
                 selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1'
                 },
                 index: {
-                  type: Scratch.ArgumentType.NUMBER,
+                  type: AT.NUMBER,
                   defaultValue: '1'
                 }
             }
         },
-        '---',
-        makeBlock('setOuterHTML',Scratch.BlockType.COMMAND,'Set outer html of: [selector] #:[index] to: [html] ',{
+        BR,
+        makeBlock('setOuterHTML',BT.COMMAND,'Set outer html of: [selector] #:[index] to: [html] ',{
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             html: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'Hello!'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
           }),
-          makeBlock('setOuterHTMLAll',Scratch.BlockType.COMMAND,'Set outer html of all matching selector: [selector] to: [html]',{
+          makeBlock('setOuterHTMLAll',BT.COMMAND,'Set outer html of all matching selector: [selector] to: [html]',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             html: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'Hello!'
             },
         }),
-        makeBlock('getOuterHTML',Scratch.BlockType.REPORTER,'Get outer html from selector: [selector] #:[index]',{
+        makeBlock('getOuterHTML',BT.REPORTER,'Get outer html from selector: [selector] #:[index]',{
                 selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1'
                 },
                 index: {
-                  type: Scratch.ArgumentType.NUMBER,
+                  type: AT.NUMBER,
                   defaultValue: '1'
                 }
             }),
-            '---',
-        makeBlock('setValue',Scratch.BlockType.COMMAND,`Set value of selector: [selector] #:[index] to: [value]`,{
+            BR,
+        makeBlock('setValue',BT.COMMAND,`Set value of selector: [selector] #:[index] to: [value]`,{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#input1'
           },
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: ''
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('setValueAll',Scratch.BlockType.COMMAND,'Set value of all matching selector: [selector] to: [value]',{
+        makeBlock('setValueAll',BT.COMMAND,'Set value of all matching selector: [selector] to: [value]',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#input1'
           },
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: ''
           },
         }),
-        makeBlock('getValue',Scratch.BlockType.REPORTER,`Get value of selector: [selector] #:[index]`,{
+        makeBlock('getValue',BT.REPORTER,`Get value of selector: [selector] #:[index]`,{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#input1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        '---',
-        makeBlock('focusBlur',Scratch.BlockType.COMMAND,'[type] selector:[selector] #:[index]',{
+        BR,
+        makeBlock('focusBlur',BT.COMMAND,'[type] selector:[selector] #:[index]',{
           type: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'focusBlur'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#input1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         },'','#000000'),
-        makeBlock('showHide',Scratch.BlockType.COMMAND,'[type] selector:[selector] #:[index]',{
+        makeBlock('showHide',BT.COMMAND,'[type] selector:[selector] #:[index]',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             type: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'showHide'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
         }),
-        makeBlock('showHideAll',Scratch.BlockType.COMMAND,'[type] all matching selector: [selector]',{
+        makeBlock('showHideAll',BT.COMMAND,'[type] all matching selector: [selector]',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             type: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'showHide'
             },
         }),
-        // makeBlock('clickElement',Scratch.BlockType.COMMAND,'Click selector:[selector] #:[index]',{
+        // makeBlock('clickElement',BT.COMMAND,'Click selector:[selector] #:[index]',{
         //   selector: {
-        //       type: Scratch.ArgumentType.STRING,
+        //       type: AT.STRING,
         //       defaultValue: '#span1'
         //     },
         //     index: {
-        //       type: Scratch.ArgumentType.NUMBER,
+        //       type: AT.NUMBER,
         //       defaultValue: '1'
         //     }
         // }),
-        '---',
-        makeBlock('getStatus',Scratch.BlockType.BOOLEAN,'Selecor:[selector] #:[index] [status]?',{
+        BR,
+        makeBlock('getStatus',BT.BOOLEAN,'Selecor:[selector] #:[index] [status]?',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             },
             status: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'status'
             }
         }),
-        makeBlock('getAnyStatus',Scratch.BlockType.BOOLEAN,'Any of selecor:[selector] [status]?',{
+        makeBlock('getAnyStatus',BT.BOOLEAN,'Any of selecor:[selector] [status]?',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             status: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'status'
             }
         }),
-        makeBlock('matches',Scratch.BlockType.BOOLEAN,'Selector:[selector] #[index] matches selector:[selectorQuery]?',{
+        makeBlock('matches',BT.BOOLEAN,'Selector:[selector] #[index] matches selector:[selectorQuery]?',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           selectorQuery: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: ':hover'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('matchesAny',Scratch.BlockType.BOOLEAN,'Any matching selector:[selector] matches selector: [selectorQuery]?',{
+        makeBlock('matchesAny',BT.BOOLEAN,'Any matching selector:[selector] matches selector: [selectorQuery]?',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           selectorQuery: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: ':hover'
           }
         }),
-        makeBlock('getElementInfo',Scratch.BlockType.REPORTER,'[info] of selector:[selector] #:[index]',{
+        makeBlock('getElementInfo',BT.REPORTER,'[info] of selector:[selector] #:[index]',{
           selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             },
             info: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               menu: 'info'
             }
         }),
-        '---',
+        BR,
         // mouse
-        makeBlock('getMouseDown',Scratch.BlockType.BOOLEAN,'Mouse down?'),
-        makeBlock('getMouseData',Scratch.BlockType.REPORTER,'Mouse [value]',{
+        makeBlock('getMouseDown',BT.BOOLEAN,'Mouse down?'),
+        makeBlock('getMouseData',BT.REPORTER,'Mouse [value]',{
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'xy'
           }
         }),
-        makeBlock('getMouseDataElement',Scratch.BlockType.REPORTER,'Mouse [value] in selector: [selector] #:[index]',{
+        makeBlock('getMouseDataElement',BT.REPORTER,'Mouse [value] in selector: [selector] #:[index]',{
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'xy'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '[Scratch="canvas"]'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('elementDBLClickedStatus',Scratch.BlockType.REPORTER,'Attribute: [attribute] of last [click] element',{
+        makeBlock('elementDBLClickedStatus',BT.REPORTER,'Attribute: [attribute] of last [click] element',{
           attribute: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'id'
           },
           click: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'click'
           }
         }),
-        makeBlock('elementDBLClickedStatusAll',Scratch.BlockType.REPORTER,'All attributes of last [click] element',{
+        makeBlock('elementDBLClickedStatusAll',BT.REPORTER,'All attributes of last [click] element',{
           click: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'click'
           }
         }),
-        '---',
-        makeBlock('changeClass',Scratch.BlockType.COMMAND,'[change] classes: [class] in selector: [selector] #:[index]',{
+        BR,
+        makeBlock('changeClass',BT.COMMAND,'[change] classes: [class] in selector: [selector] #:[index]',{
           change: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'change'
           },
           class: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'Cool,cold'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        // makeBlock('removeClass',Scratch.BlockType.COMMAND,'Remove classes: [class] from selector: [selector] #:[index]',{
+        // makeBlock('removeClass',BT.COMMAND,'Remove classes: [class] from selector: [selector] #:[index]',{
         //   class: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: 'Cool,cold'
         //   },
         //   selector: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: '#span1'
         //   },
         //   index: {
-        //     type: Scratch.ArgumentType.NUMBER,
+        //     type: AT.NUMBER,
         //     defaultValue: '1'
         //   }
         // }),
-        makeBlock('changeClassAll',Scratch.BlockType.COMMAND,'[change] classes: [class] in all matching selector: [selector]',{
+        makeBlock('changeClassAll',BT.COMMAND,'[change] classes: [class] in all matching selector: [selector]',{
           change: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             menu: 'change'
           },
           class: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '["Warm","hot"]'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1,[Scratch="canvas"]'
           }
         }),
-        // makeBlock('removeClassAll',Scratch.BlockType.COMMAND,'Remove classes: [class] from all matching selector: [selector]',{
+        // makeBlock('removeClassAll',BT.COMMAND,'Remove classes: [class] from all matching selector: [selector]',{
         //   class: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: 'cool,cold'
         //   },
         //   selector: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: '#span1'
         //   }
         // }),
-        makeBlock('getClassList',Scratch.BlockType.REPORTER,'Get classes of selector: [selector] #:[index]',{
+        makeBlock('getClassList',BT.REPORTER,'Get classes of selector: [selector] #:[index]',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('getClassListAll',Scratch.BlockType.REPORTER,'Get classes of all matching selector: [selector]',{
+        makeBlock('getClassListAll',BT.REPORTER,'Get classes of all matching selector: [selector]',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1,[Scratch="canvas"]'
           }
         }),
-        '---',
+        BR,
         {
           opcode: 'setAttribute',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: BT.COMMAND,
           text: 'Set attribute:[attribute] of: [selector] #:[index] to: [value]',
           arguments: {
             attribute: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'title'
             },
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             },
             value: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'I have a Title now!'
             }
           }
         },
-        makeBlock('setAttributeAll',Scratch.BlockType.COMMAND,'Set attribute: [attribute] for all matching selector: [selector] to: [value]',{
+        makeBlock('setAttributeAll',BT.COMMAND,'Set attribute: [attribute] for all matching selector: [selector] to: [value]',{
                 attribute: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: 'title'
                 },
                 selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1'
                 },
                 value: {
-                  type: Scratch.ArgumentType.STRING,
+                  type: AT.STRING,
                   defaultValue: 'We all have Titles now!'
                 }
 
         }),
-        makeBlock('removeAttribute',Scratch.BlockType.COMMAND,'Remove attribute: [attribute] from selector: [selector] #:[index]',{
+        makeBlock('removeAttribute',BT.COMMAND,'Remove attribute: [attribute] from selector: [selector] #:[index]',{
           attribute: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'title'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('removeAttributeAll',Scratch.BlockType.COMMAND,'Remove attribute: [attribute] from all matching selector: [selector]',{
+        makeBlock('removeAttributeAll',BT.COMMAND,'Remove attribute: [attribute] from all matching selector: [selector]',{
           attribute: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'title'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           }
         }),
-        // makeBlock('removeAllAttributes',Scratch.BlockType.COMMAND,'Remove all attributes from selector: [selector] #[index]',{
+        // makeBlock('removeAllAttributes',BT.COMMAND,'Remove all attributes from selector: [selector] #[index]',{
         //   selector: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: '#span1'
         //   },
         //   index: {
-        //     type: Scratch.ArgumentType.NUMBER,
+        //     type: AT.NUMBER,
         //     defaultValue: '1'
         //   }
         // }),
-        // makeBlock('removeAllAttributesAll',Scratch.BlockType.COMMAND,'Remove all attributes from all matching selector: [selector]',{
+        // makeBlock('removeAllAttributesAll',BT.COMMAND,'Remove all attributes from all matching selector: [selector]',{
         //   selector: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: '#span1'
         //   }
         // }),
-        '---',
-        makeBlock('setAttributeJSON',Scratch.BlockType.COMMAND,'Set attributes from JSON:[json] for: [selector] #:[index]',{
+        BR,
+        makeBlock('setAttributeJSON',BT.COMMAND,'Set attributes from JSON:[json] for: [selector] #:[index]',{
             json: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '{"title":"I have a Title now!"}'
             },
             selector: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1'
             },
             index: {
-              type: Scratch.ArgumentType.NUMBER,
+              type: AT.NUMBER,
               defaultValue: '1'
             }
           }),
-        makeBlock('setAttributeAllJSON',Scratch.BlockType.COMMAND,'Set attributes from JSON: [json] for all matching selector: [selector]',{
+        makeBlock('setAttributeAllJSON',BT.COMMAND,'Set attributes from JSON: [json] for all matching selector: [selector]',{
                 json: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '{"title":"We all have Titles now!"}'
                 },
                 selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1,[Scratch="canvas"]'
                 }
         
         }),
-        makeBlock('removeAttributeARRAY',Scratch.BlockType.COMMAND,'Remove attributes in ARRAY: [json] from selector: [selector] #:[index]',{
+        makeBlock('removeAttributeARRAY',BT.COMMAND,'Remove attributes in ARRAY: [json] from selector: [selector] #:[index]',{
           json: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '["title","class"]'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           }
         }),
-        makeBlock('removeAttributeAllARRAY',Scratch.BlockType.COMMAND,'Remove attributes in ARRAY: [json] from all matching selector: [selector]',{
+        makeBlock('removeAttributeAllARRAY',BT.COMMAND,'Remove attributes in ARRAY: [json] from all matching selector: [selector]',{
           json: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '["class","title"]'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           }
         }),
-        '---',
+        BR,
         {
             opcode: 'getAttribute',
-            blockType: Scratch.BlockType.REPORTER,
+            blockType: BT.REPORTER,
             allowDropAnywhere: true,
             text: 'Get attribute: [attribute] from selector: [selector] #:[index]',
             arguments: {
                 attribute: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: 'title'
                 },
                 selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1'
                 },
                 index: {
-                  type: Scratch.ArgumentType.NUMBER,
+                  type: AT.NUMBER,
                   defaultValue: '1'
                 }
             }
         },
-        makeBlock('getAttributeAllCertain',Scratch.BlockType.REPORTER,'Get attribute:[attribute] from all matching selector:[selector]',{
+        makeBlock('getAttributeAllCertain',BT.REPORTER,'Get attribute:[attribute] from all matching selector:[selector]',{
           attribute: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'title'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           }
         }),
-        makeBlock('getAttributeAll',Scratch.BlockType.REPORTER,'Get all attributes from selector: [selector] #:[index]',{
+        makeBlock('getAttributeAll',BT.REPORTER,'Get all attributes from selector: [selector] #:[index]',{
           selector: {
-                    type: Scratch.ArgumentType.STRING,
+                    type: AT.STRING,
                     defaultValue: '#span1'
                 },
                 index: {
-                  type: Scratch.ArgumentType.NUMBER,
+                  type: AT.NUMBER,
                   defaultValue: '1'
                 }
         }),
-        makeBlock('getAttributeAllAll',Scratch.BlockType.REPORTER,'Get all attributes from all matching selector: [selector]',{
+        makeBlock('getAttributeAllAll',BT.REPORTER,'Get all attributes from all matching selector: [selector]',{
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1,[Scratch="canvas"]'
           }
         }),
-        '---',
-        makeBlock('setTitle',Scratch.BlockType.COMMAND,'Set page title: [title]',{
+        BR,
+        makeBlock('setTitle',BT.COMMAND,'Set page title: [title]',{
           title: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'Scratch!'
           }
         }),
-        makeBlock('getTitle',Scratch.BlockType.REPORTER,'Page title'),
-        makeBlock('getOGTitle',Scratch.BlockType.REPORTER,'Orginal Title'),
-        makeBlock('setIcon',Scratch.BlockType.COMMAND,'Set page icon to url:[url]',{
+        makeBlock('getTitle',BT.REPORTER,'Page title'),
+        makeBlock('getOGTitle',BT.REPORTER,'Orginal Title'),
+        makeBlock('setIcon',BT.COMMAND,'Set page icon to url:[url]',{
           url: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'https://scratch.mit.edu/favicon.ico'
           }
         }),
-        makeBlock('getIcon',Scratch.BlockType.REPORTER,'Page icon'),
+        makeBlock('getIcon',BT.REPORTER,'Page icon'),
 
-        '---',
+        BR,
         makeButton('Note','SanitizeNote'),
-        makeBlock('sanitize',Scratch.BlockType.REPORTER,'Sanitize: [input]',{
+        makeBlock('sanitize',BT.REPORTER,'Sanitize: [input]',{
           input: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'Some Possibly unsafe HTML'
           }
         }),
         //CSS
         label('CSS'),
         // this is nice
-        makeBlock('setStyleSheet',Scratch.BlockType.COMMAND,'Set StyleSheet with id:[id] to css:[css]',{
+        makeBlock('setStyleSheet',BT.COMMAND,'Set StyleSheet with id:[id] to css:[css]',{
             css: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: '#span1 {color: red;}'
             },
             id: {
-              type: Scratch.ArgumentType.STRING,
+              type: AT.STRING,
               defaultValue: 'css-1'
             }
           },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('removeStyleSheet',Scratch.BlockType.COMMAND,'Remove StyleSheet with id:[id]',{
+        makeBlock('removeStyleSheet',BT.COMMAND,'Remove StyleSheet with id:[id]',{
           id: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'css-1'
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('removeAllStyleSheets',Scratch.BlockType.COMMAND,'Remove All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('getSpecificStyleSheet',Scratch.BlockType.REPORTER,'StyleSheet: [id]',{
+        makeBlock('removeAllStyleSheets',BT.COMMAND,'Remove All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        makeBlock('getSpecificStyleSheet',BT.REPORTER,'StyleSheet: [id]',{
           id: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'css-1'
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('getStyleSheets',Scratch.BlockType.REPORTER,'All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('importStyleSheets',Scratch.BlockType.COMMAND,'Import StyleSheets from:[input] ',{
+        makeBlock('getStyleSheets',BT.REPORTER,'All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        makeBlock('importStyleSheets',BT.COMMAND,'Import StyleSheets from:[input] ',{
           input: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '{}'
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('exportStyleSheets',Scratch.BlockType.REPORTER,'Export StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
-        '---',
-        makeBlock('setStyle',Scratch.BlockType.COMMAND,'Set style:[style] of: [selector] #: [index] to:[value]',{
+        makeBlock('exportStyleSheets',BT.REPORTER,'Export StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        BR,
+        makeBlock('setStyle',BT.COMMAND,'Set style:[style] of: [selector] #: [index] to:[value]',{
           style: {
-            type: Scratch.ArgumentType.STRING,
-            defaultValue: 'background-color'
+            type: AT.STRING,
+            defaultValue: 'color'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: '1'
           },
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'red'
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('setStyleAll',Scratch.BlockType.COMMAND,'Set style:[style] of all elements matching: [selector] to:[value]',{
+        makeBlock('setStyleAll',BT.COMMAND,'Set style:[style] of all elements matching: [selector] to:[value]',{
           style: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'color'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           value: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'red'
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('getStyle',Scratch.BlockType.REPORTER,'Style: [style] of: [selector] #: [index]',{
+        makeBlock('getStyle',BT.REPORTER,'Style: [style] of: [selector] #: [index]',{
           style: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: 'color'
           },
           selector: {
-            type: Scratch.ArgumentType.STRING,
+            type: AT.STRING,
             defaultValue: '#span1'
           },
           index: {
-            type: Scratch.ArgumentType.NUMBER,
+            type: AT.NUMBER,
             defaultValue: 1,
           }
         },'#264de4','#2965f1','#264de4',cssIcon),
-        // makeBlock('checkImportance',Scratch.BlockType.BOOLEAN,'Is style: [style] of [selector] # [index] important?',{
+        makeBlock('getStyleAll',BT.REPORTER,'Style: [style] of all matching: [selector]',{
+          style: {
+            type: AT.STRING,
+            defaultValue: 'color'
+          },
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          }
+        },'#264de4','#2965f1','#264de4',cssIcon),
+        // makeBlock('checkImportance',BT.BOOLEAN,'Is style: [style] of [selector] # [index] important?',{
         //   style: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: 'color'
         //   },
         //   selector: {
-        //     type: Scratch.ArgumentType.STRING,
+        //     type: AT.STRING,
         //     defaultValue: '#span1'
         //   },
         //   index: {
-        //     type: Scratch.ArgumentType.NUMBER,
+        //     type: AT.NUMBER,
         //     defaultValue: 1,
         //   }
         // },'#264de4','#2965f1','#264de4',cssIcon),
+        label('Text editor'),
+        makeBlock('openTextEditor',BT.COMMAND,'Open text editor'),
+        makeBlock('closeTextEditor',BT.COMMAND,'Close text editor'),
+        makeBlock('setTextEditorValue',BT.COMMAND,'Set text editor value to [value]', {
+          value: ARG(AT.STRING,'')
+        }),
+        makeBlock('getTextEditorValue',BT.REPORTER,'Get text editor value'),
+        // licence
+        BR,
+        {
+          blockType: BT.BUTTON,
+          text: 'Apache Licence',
+          func: 'ApacheLicence'
+        },
+        {
+          blockType: BT.BUTTON,
+          text: 'Mozilla Public Licence',
+          func: 'MozillaPublicLicence'
+        },
+        {
+          blockType: BT.BUTTON,
+          text: 'CC Attribution 3.0 Unported',
+          func: 'CC3AU'
+        },
+        // End licence
         label('Ver: '+ver+'')
       ],
       menus: {
@@ -1104,6 +1194,34 @@ class OBhtml {
 
   toggleLog(args) {
   this.log = args.onOff;
+  }
+
+  openTextEditor() {
+    openScriptEditor();
+  }
+
+  closeTextEditor() {
+    try {
+      closeScriptEditor();
+    } catch {
+      console.warn('(OBHTML) - Could not close the text editor!');
+    }
+  }
+
+  setTextEditorValue(args) {
+    try {
+      document.querySelector('#OBHTML-editor').value = (''+args.value);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  getTextEditorValue() {
+    try {
+      return document.querySelector('#OBHTML-editor').value;
+    } catch {
+      return '';
+    }
   }
 
   // HTML
@@ -1289,7 +1407,7 @@ class OBhtml {
     elements.forEach(e => {
     out.push(getAllAttributes(e));
     });
-    return makeString(out);
+    return JSON.stringify(out);
     } catch (error) {return '[]'; if(this.log) console.error(error);}
   }
 
@@ -1303,8 +1421,8 @@ class OBhtml {
           out.push(attributes[args.attribute]);
         }
       });
-      return makeString(out);
-    } catch (error) {return '[]'; if (this.log) console.error(error);}
+      return JSON.stringify(out);
+    } catch (error) {return '[]'; if(this.log) console.error(error);}
   }
 
   // classes
@@ -1312,24 +1430,20 @@ class OBhtml {
   changeClass(args) {
     try {
     // check class if is native array or can be made into array, else split via comma.
-    const classes = !Array.isArray(JSON.parse(args.class)) ? typeof args.class == 'string' ? args.class.split(',') : args.class : Array.isArray(args.class) ? args.class : JSON.parse(args.class);
+    let classes;
+    try {classes = Array.isArray(args.class) ? args.class : Array.isArray(JSON.parse(args.class)) ? JSON.parse(args.class) : args.class.split(',')}
+    catch {classes = args.class.split(',')};
     const element = document.querySelectorAll(args.selector)[args.index - 1];
-    console.log(classes)
     classes.forEach(cl => {
       if (args.change == '0') {
       element.classList.add(cl);
       } else if (args.change == '1') {
       element.classList.remove(cl);
       }
-      console.log(cl)
-      // else if (args.change == '2') {
-      // element.classList.replace()
-      // }
     });
     } catch (error) {if(this.log) console.error(error);}
   }
-  
-  // 👆 same as above ☝
+
   changeClassAll(args) {
     try {
     const classes = !Array.isArray(JSON.parse(args.class)) ? typeof args.class == 'string' ? args.class.split(',') : args.class : Array.isArray(args.class) ? args.class : JSON.parse(args.class);
@@ -1340,9 +1454,6 @@ class OBhtml {
       } else if (args.change == '1') {
       element.classList.remove(cl);
       }
-      // else if (args.change == '2') {
-      // element.classList.replace()
-      // }
     });});
     } catch (error) {if(this.log) console.error(error);}
   }
@@ -1354,7 +1465,7 @@ class OBhtml {
       element.classList.forEach(cl => {
         out.push(cl);
       });
-      return out;
+      return JSON.stringify(out);
     } catch (error) {return [];if(this.log) console.error(error);} 
   }
 
@@ -1368,7 +1479,7 @@ class OBhtml {
         });
       fullout.push(out);
       });
-      return fullout;
+      return JSON.stringify(fullout);
     } catch (error) {return []; if(this.log) console.error(error);}
   }
   
@@ -1423,7 +1534,7 @@ class OBhtml {
       return !!document.querySelectorAll(args.selector)[args.index - 1];
       }
       if (args.status == 'checked') {
-      return e.checked;
+      return !!e.checked;
       }
     } catch (error) {return false; if(this.log) console.error(error);}
   }
@@ -1465,11 +1576,11 @@ class OBhtml {
     try {
       let out = null;
       if (args.click == '0') {
-      out = mouse.click;
+      out = ''+mouse.click;
       } else if (args.click == '1') {
-      out = mouse.dblClick;
+      out = ''+mouse.dblClick;
       } else if (args.click == '2'); {
-      out = mouse.hover;
+      out = ''+mouse.hover;
       }
       out = out.getAttribute(args.attribute);
       return out == null ? '' : out;
@@ -1485,7 +1596,7 @@ class OBhtml {
       } else if (args.click == '2') {
       return getAllAttributes(mouse.hover); 
       }
-    } catch (error) {return {}; if (this.log) console.error(error);}
+    } catch (error) {return {}; if(this.log) console.error(error);}
   }
 
   matches(args) {
@@ -1575,7 +1686,7 @@ class OBhtml {
       } else {
       return clamp(map(mouse.page.y,element.top,element.top + element.height,0,element.height),0,element.height);
       }
-    } catch (error) {return '0'; if (this.log) console.error(error);}
+    } catch (error) {return '0'; if(this.log) console.error(error);}
   }
 
   sanitize(args) {
@@ -1589,7 +1700,7 @@ class OBhtml {
   }
 
   getTitle() {
-    return document.title;
+    return ''+document.title;
   }
 
   getOGTitle() {
@@ -1612,18 +1723,18 @@ class OBhtml {
   // CSS
 
   setStyleSheet(args) {
-    const id = `OB-StyleSheets-`+args.id+``;
+    const id = `OB-StyleSheets-`+getSafeId(args.id);
     try {
     document.querySelectorAll(`#`+id+``).forEach((element) => (element).remove());
     } catch (error) {if(this.log) console.error(error);}
     try {
-    document.head.insertAdjacentHTML('beforeend',`<style id="`+id+`">`+args.css+`</style>`);
+    document.head.insertAdjacentHTML('beforeend',purifyCSS(`<style id="`+id+`">`+args.css+`</style>`));
     this.styleSheets[args.id] = args.css;
     } catch (error) {if(this.log) console.error(error);}
   }
 
   removeStyleSheet(args) {
-    const id = `#OB-StyleSheets-`+args.id+``;
+    const id = `#OB-StyleSheets-`+getSafeId(args.id);
     try {
       document.querySelectorAll(id).forEach((element) => (element).remove())
       delete this.styleSheets[args.id];
@@ -1635,7 +1746,7 @@ class OBhtml {
     try {
     ids.forEach(id => {
       try {
-      document.querySelectorAll(`#OB-StyleSheets-`+id+``).forEach(obj => obj.remove());
+      document.querySelectorAll(`#OB-StyleSheets-`+getSafeId(id)+``).forEach(obj => obj.remove());
       delete this.styleSheets[id];
     } catch {}
     });
@@ -1645,27 +1756,32 @@ class OBhtml {
 
   getStyleSheets(args) {
     try {
-       return makeString(Object.keys(this.styleSheets)) ?? '[]';
-      } catch (error) {return '';if(this.log) console.error(error);}
+        return JSON.stringify(Object.keys(this.styleSheets)) ?? '[]';
+      } catch (error) {if(this.log) console.error(error); return '';}
   }
 
   importStyleSheets(args) {
     try {
-      if (args.input == '' | args.input == null | args.input == '{}' & !vm.runtime.isPackaged & !confirm.importStyleSheets ? confirm.importStyleSheets = window.confirm('Importing StyleSheets from an empty string\nwill erase all currently stored styles.\n\nThis warning will not show while packaged.\n\nDo you wish to procced?') : true)
-      this.styleSheets = JSON.parse(args.input);
-    } catch (error) {if (this.log) console.error(error);}
+      //if (args.input == '' | args.input == null | args.input == '{}' & !vm.runtime.isPackaged & !confirm.importStyleSheets ? confirm.importStyleSheets = window.confirm('Importing StyleSheets from an empty string\nwill erase all currently stored styles.\n\nThis warning will not show while packaged.\n\nDo you wish to procced?') : true)
+      if (typeof JSON.parse(args.input) == 'object') {
+        const sheets = Object.assign(this.styleSheets,JSON.parse(args.input));
+        Object.keys(sheets).forEach(sheet => {
+          this.setStyleSheet({'id':sheet,'css':sheets[sheet]});
+        });
+      }
+    } catch (error) {console.error(error);}
   }
 
   exportStyleSheets() {
     try {
-      return makeString(this.styleSheets);
-    } catch (error) {return '{}'; if (this.log) console.error(error);}
+      return JSON.stringify(this.styleSheets);
+    } catch (error) { if(this.log) console.error(error);return '{}';}
   }
 
   getSpecificStyleSheet(args) {
     try {
       return purify(this.styleSheets[args.id]) ?? '';
-    } catch (error) {return ''; if(this.log) console.error(error);}
+    } catch (error) { if(this.log) console.error(error); return '';}
   }
 
   setStyle(args) {
@@ -1690,13 +1806,24 @@ class OBhtml {
     }
   }
 
+  getStyleAll(args) {
+    try {
+      let outStyles = [];
+      document.querySelectorAll(''+args.selector).forEach(element => {
+        outStyles.push(element.style[''+args.style]);
+      });
+      return JSON.stringify(outStyles);
+    } catch (error) {if (this.log) {console.error(error);}; return '';};
+  }
+
   checkImportance(args) {
     try {
     return !!document.querySelectorAll(args.selector)[args.index - 1].style[args.style].trim().endsWith('!important');
     } catch (error) {
-      return 'false';
-      if(this.log) 
+      if(this.log) {
         console.error(error);
+      }
+      return 'false';
     }
   }
 
@@ -1713,11 +1840,7 @@ class OBhtml {
   }
 
   onlineWarning() {
-  alert(`Warning!\nUsing this extension on projects that have online functionality is highly discouraged!\n\nFor the protection of users, any inputs that are sent or received need to be thouroughly sanitized!\n\nWhile the built in method may do this automatically, the best way to prevent attacks is to not allow connection at all.\n\nI (Otterboing) am definitely not a security expert, so this extension is probably a hazard and should be treated as such.\n\nI am not responsible for any problems that occur. 😊`)
-  }
-
-  SanitizeNote() {
-  alert(`Note - All blocks that insert html are already sanitized.\nThe sanitize block is meant to clean html for other extensions that may use it.\n\nSuch as the marked.js extension: "markedInTurbowarp.js"\nUsing marked.js it takes markdown and outpus html.\n\nhttps://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/markedInTurbowarp.js \n\nShameless plug...`)
+  alert(`Warning!\nUsing this extension on projects that have online functionality is highly discouraged!\n\nFor the protection of users coming from other extensions.\n\nSuch as the marked.js extension: "markedInTurbowarp.js"\n\nThis extension uses marked.js to take markdown and output html.\n\nhttps://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/markedInTurbowarp.js \n\nShameless plug...`)
   }
 
   ApacheLicence() {
@@ -1735,7 +1858,7 @@ class OBhtml {
     Scratch.openWindow('https://creativecommons.org/licenses/by/3.0/legalcode.txt')
     }
     } catch {}
-  } 
+  }
   
 }
 Scratch.extensions.register(new OBhtml());
