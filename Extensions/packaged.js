@@ -1,5 +1,6 @@
-// MIT Licence 
-// Description: This is an extension yes... yes this is very much an extension. 🐍
+// MIT Licence
+// Name: Packaged.js 
+// Description: Checks if your project is packaged or not. 🦐
 // Page: https://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/packaged.js
 
 (function (Scratch) {
