@@ -92,7 +92,7 @@ A colorful way to keep your project organized!
 - Reporter `[comment] ⇠// [input]`
 - Boolean `[comment] ⇠// [input]`
 
-### Inline Variables
+### Inline Variables <img title="Fav!" width="24px" height="24px" src="Extra%20Files/StarExtra.png">
 [Inline Variables](Extensions/InlineVariables.js)
 
 Reference variables in a string and replace them with their value!
@@ -126,7 +126,7 @@ Both:
 
 - Get String All: `[string]`
 
-### Extra Array
+### Extra Array <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">
 [Extra Array](Extensions/extraArray.js)
 
 Some Misc Tools For Handling Arrays!
@@ -166,7 +166,7 @@ Just adds some more join blocks.
 
 They get up to like 6 inputs it's crazy I swear!
 
-### HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">
+### HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">
 [HTML](extensions/HTML.js)
 
 Add, remove, modify and style elements on the page based on selectors!
