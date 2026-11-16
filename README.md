@@ -5,30 +5,21 @@ A collection of all my Turbowarp extensions! <a href="https://otterboing.neociti
 
 It's a bit small right now but the stash will grow bigger!
 
-# Docs
-[Documentation](Docs/Docs.md)
+<!-- TODO -->
+<!-- # Docs
+[Documentation](Docs/Docs.md) -->
 
 ## <img width="24" alt="⚠" src="Extra%20Files/Warning.png" />  Warning! <img width="24" alt="⚠" src="Extra%20Files/Warning.png" />
 I don't know what I'm doing!
 
-**Updates may break things, always backup your project.**
+**Updates may break things, always backup your projects.**
 
 
 ---
 
 ## Sandboxed Extensions
 
-Extensions run with the Sandbox enabled will be much slower or may not work at all!
-
-<sub>Additionally any buttons probably won't work.</sub>
-
-#### Un-sandboxed extensions:
-
-- [Cursors-Extended ![](Extra%20Files/UnSandboxed!.png)](Extensions/Cursors-Extended.js) - Requires JS to change the Scratch Canvas's CSS.
-- [Inline Variables ![](Extra%20Files/UnSandboxed!.png)](Extensions/InlineVariables.js) - Requires JS to manage the variables.
-- [HTML ![](Extra%20Files/UnSandboxed!.png)](Extensions/HTML.js) - Requires JS to manage and edit the DOM.
-- [Marked In Turbowarp ![](Extra%20Files/UnSandboxed!.png)](Extensions/markedInTurbowarp.js) - Requires JS to add and use [marked.js](https://marked.js.org).
-
+Extensions must be run without the Sandbox enabled. If it is, extensions will be much slower or may not even work at all!
 
 # Glossary
 
