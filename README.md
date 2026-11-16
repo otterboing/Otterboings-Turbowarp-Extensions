@@ -34,18 +34,18 @@ Extensions run with the Sandbox enabled will be much slower or may not work at a
 
 #### Contents
 
-<!-- <img title="Fav!" width="24px" height="24px" src="Extra%20Files/StarExtra.png"> -->
+<!-- <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"> -->
 <!-- <img title="NEW!" alt="New!" width="24px" height="24px" src="Extra%20Files/NEW!.png"> -->
 <!-- <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png"> -->
 
 - [Small-Math](#small-math)
 - [Cursors-Extended](#cursors-extended)
 - [Colorful Comments!](#colorful-comments)
-- [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables)
-- [Extra Array <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#extra-array)
-- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html)
+- [Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">](#inline-variables-)
+- [Extra Array <img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#extra-array-)
+- [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html-)
 - [Marked In Turbowarp](#marked-in-turbowarp)
-- [More Joins <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#more-joins)
+- [More Joins <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#more-joins-)
 
 ---
 
@@ -92,7 +92,7 @@ A colorful way to keep your project organized!
 - Reporter `[comment] ⇠// [input]`
 - Boolean `[comment] ⇠// [input]`
 
-### Inline Variables <img title="Fav!" width="24px" height="24px" src="Extra%20Files/StarExtra.png">
+### Inline Variables <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png">
 [Inline Variables](Extensions/InlineVariables.js)
 
 Reference variables in a string and replace them with their value!
