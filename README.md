@@ -278,6 +278,14 @@ HTML Sanitized by [DOMPurify](https://github.com/cure53/dompurify)
 - Set Style: `Set style: [style] of: [selector] #:[index] to: [value]`
 - Set Style All: `Set style: [style] of all elements matching: [selector] to: [value]`
 - Get Style: `Style: [style] of: [selector] #:[index]`
+- Get Style All: `Style [style] of all matching: [selector]` "Returns array of styles, elements without said style will still return an empty string."
+
+<br>
+
+- Open Text Editor: `Open text editor` "Opens the text editor."
+- Close Text Editor: `Close text editor` "Closes the text editor."
+- Set Text Editor Value: `Set text editor value to: [value]` "Sets the text editors value to given value."
+- Get Text Editor Value: `Get text editor value` "Returns the text editors value as a string."
 
 ---
 ---
