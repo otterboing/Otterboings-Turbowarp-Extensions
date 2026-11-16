@@ -37,7 +37,7 @@ Extensions must be run without the Sandbox enabled. If it is, extensions will be
 - [HTML <img title="Fav!" width="24px" src="Extra%20Files/starExtra.png"><img title="Update!" alt="Update" width="48px" height="24px" style="margin-left: 5px;" src="Extra%20Files/Update.png">](#html-)
 - [Marked In Turbowarp](#marked-in-turbowarp)
 - [More Joins <img title="NEW!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#more-joins-)
-- [Packaged](#packaged-)
+- [Packaged <img title="NEW!" alt="New!" width="24px" height="24px" src="Extra%20Files/NEW!.png">](#packaged-)
 
 ---
 
