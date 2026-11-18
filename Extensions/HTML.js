@@ -6,13 +6,35 @@
 // DOMPurify: <https://github.com/cure53/DOMPurify>
 // DOMPurify Licence: Apache license 2.0 and Mozilla Public License 2.0 | https://github.com/cure53/DOMPurify/blob/3.4.8/LICENSE
 
+// Added:
+
+//  A new way to add functions to elements then call them when they're clicked!
+//   New blocks to use external StyleSheets!
+//    A block to check if the text editor is open.
+//     New html and css icons without licenses attached.
+//      A block to purify strings of any html at all.
+//       Ability to just add extra settings at the end of the makeBlock function.
+//        A block to get browser info.
+//         Blocks to check when a certain selector meets a status.
+
+// Fixed:
+
+//  All blocks now use the makeBlock function.
+//   Fixed status block only using hovered option.
+//    StyleSheet ids not being consistant.
+//     Some buttons.
+//      Reliance on getColor function. It's now gone.
+//       Many small things.
+//        Moved change log to top. 👋
+
+// Planned:
+
+//  Maybe add a way to turn on and off using script attributes. (Idk bout this one though.)
+
+
 (async function (Scratch) {
 
 if (!Scratch.extensions.unsandboxed) throw new Error("OBhtml Must Be Run Un-Sandboxed! - Requires JS modify the page.");
-
-
-// If you don't like all the extra licences you can just remove the icons and DOMPurify. Fair Warning removing DOMPurify will open up users of your project to XML and XSS attacks.
-// NEVER DO THIS WITHOUT REPLACING IT IN A MULTIPLAYER GAME!
 
 // You can replace the sanitizer by replacing DOMPuify 👇 and modifying the Purify() function.
 
@@ -25,8 +47,18 @@ if (!Scratch.extensions.unsandboxed) throw new Error("OBhtml Must Be Run Un-Sand
 
 // End of https://github.com/cure53/DOMPurify/blob/main/dist/purify.min.js
 
+const html_tags = ['a','abbr','acronym','address','area','article','aside','audio','b','bdi','bdo','big','blink','blockquote','body','br','button','canvas','caption','center','cite','code','col','colgroup','content','data','datalist','dd','decorator','del','details','dfn','dialog','dir','div','dl','dt','element','em','fieldset','figcaption','figure','font','footer','form','h1','h2','h3','h4','h5','h6','head','header','hgroup','hr','html','i','img','input','ins','kbd','label','legend','li','main','map','mark','marquee','menu','menuitem','meter','nav','nobr','ol','optgroup','option','output','p','picture','pre','progress','q','rp','rt','ruby','s','samp','search','section','select','shadow','slot','small','source','spacer','span','strike','strong','style','sub','summary','sup','table','tbody','td','template','textarea','tfoot','th','thead','time','tr','track','tt','u','ul','var','video','wbr'];
+
+const html_attributes = ['accept','action','align','alt','autocapitalize','autocomplete','autopictureinpicture','autoplay','background','bgcolor','border','capture','cellpadding','cellspacing','checked','cite','class','clear','color','cols','colspan','command','commandfor','controls','controlslist','coords','crossorigin','datetime','decoding','default','dir','disabled','disablepictureinpicture','disableremoteplayback','download','draggable','enctype','enterkeyhint','exportparts','face','for','headers','height','hidden','high','href','hreflang','id','inert','inputmode','integrity','ismap','kind','label','lang','list','loading','loop','low','max','maxlength','media','method','min','minlength','multiple','muted','name','nonce','noshade','novalidate','nowrap','open','optimum','part','pattern','placeholder','playsinline','popover','popovertarget','popovertargetaction','poster','preload','pubdate','radiogroup','readonly','rel','required','rev','reversed','role','rows','rowspan','spellcheck','scope','selected','shape','size','sizes','slot','span','srclang','start','src','srcset','step','style','summary','tabindex','title','translate','type','usemap','valign','value','width','wrap','xmlns'];
+
 function purify(html) {
-  try {return DOMPurify.sanitize(html);}
+  try {return DOMPurify.sanitize(html,{FORCE_BODY:true,ALLOWED_TAGS:html_tags,ALLOWED_ATTR:html_attributes.concat(['function','args'])});}
+  catch (error) {console.error(error); return html;}
+}
+
+// Unused for now.
+function purifyFunctions(html) {
+  try {return DOMPurify.sanitize(html,{FORCE_BODY:true,ALLOWED_TAGS:html_tags,ALLOWED_ATTR:html_attributes.concat(['function','args'])})}
   catch (error) {console.error(error); return html;}
 }
 
@@ -34,45 +66,22 @@ function purifyCSS(html) {
   try {return DOMPurify.sanitize(html,{FORCE_BODY:true,ALLOWED_TAGS:['style'],ALLOWED_ATTR:['style','id']});}
   catch (error) {console.error(error); return '';};
 }
+
+function purifyText(html) {
+  try {return DOMPurify.sanitize(html,{USE_PROFILES:{HTML:false}})}
+  catch (error) {console.error(error); return '';};
+}
 //
 
-const ver = '1.5.0';
-
-// Added:
-//
-// > Blocks to open, close, and get/set the value of the new text editor.
-// >> New way to purify CSS.
-// >>> Shorthands for blockTypes, attributeTypes and Breaks.
-// >>>> A block to get a specific style from all matching a selector as an array.
-//
-// Fixed:
-//
-// > Various blocks returning a js object instead of a string.
-// >> CSS stylesheets being created with invalid ids, making them impossible to delete with the given blocks.
-// >>> CSS stylesheets being created without being sanitized. (oops)
-// >>>> Spelling mistakes in notes.
-// >>>>> Checking whether a selector is checked or not, returning nothing if the element doesn't exist.
-// >>>>>> Functions using slow makeString function instead of JSON.stringify().
-// >>>>>>> Updated ARG function to use my current implementation.
-//
-// Planned:
-//
-// > Add new QL blocks.
-// >> Add a way to store, delete and edit JS elements directly.
-// >>> Maybe add a way to turn on and off using script attributes. (Idk bout this one though.)
-// >>>> Update all blocks to use the newer makeBlock function.
-// >>>>> Fix the color definitions to be easier to use.
+const ver = '1.5.1';
 
 // --------------
-
-// Licence of HTML5 and CSS3 logos: Creative Commons Attribution 3.0 Unported <https://creativecommons.org/licenses/by/3.0/>
-// icon and cssIcon attributed to the W3C. <https://www.w3.org/>
-const icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMzYyLjggNDExLjQiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTMzIDM3MC40IDAgMGgzNjIuOGwtMzMgMzcwLjItMTQ4LjcgNDEuMiIgZmlsbD0iI2U0NGQyNiIvPjxwYXRoIGQ9Ik0xODEuNCAzNzkuOVYzMC40aDE0OC4zbC0yOC4zIDMxNiIgZmlsbD0iI2YxNjUyOSIvPjxwYXRoIGQ9Ik02Ny40IDc1LjdoMTE0djQ1LjRoLTY0LjJsNC4yIDQ2LjVoNjB2NDUuM0g3OS44bTIgMjIuOGg0NS42bDMuMiAzNi4zIDUwLjggMTMuNlYzMzNsLTkzLjItMjYiIGZpbGw9IiNlYmViZWIiLz48cGF0aCBkPSJNMjkwLjggMTIxLjFIMTgxLjJWNzUuN0gyOTVNMjc0LjIgMzA3bC05MyAyNS44di00Ny4ybDUwLjctMTMuNiA1LjMtNTloLTU2di00NS40aDEwNS41IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg=='
-const cssIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZmlsbD0iIzI2NGRlNCIgZD0iTTcxLjM1NyA0NjAuODE5IDMwLjI3MiAwaDQ1MS40NTZsLTQxLjEyOSA0NjAuNzQ2TDI1NS43MjQgNTEyeiIvPjxwYXRoIGZpbGw9IiMyOTY1ZjEiIGQ9Im00MDUuMzg4IDQzMS40MDggMzUuMTQ4LTM5My43M0gyNTZ2NDM1LjE0NnoiLz48cGF0aCBmaWxsPSIjZWJlYmViIiBkPSJtMTI0LjQ2IDIwOC41OSA1LjA2NSA1Ni41MTdIMjU2VjIwOC41OXptLTUuMDQxLTU3Ljg3NUgyNTZWOTQuMTk3SDExNC4yODF6TTI1NiAzNTUuMzcybC0uMjQ4LjA2Ni02Mi45NDQtMTYuOTk2LTQuMDIzLTQ1LjA3NmgtNTYuNzM2bDcuOTE5IDg4Ljc0MSAxMTUuNzcyIDMyLjE0LjI2LS4wNzN6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI1NS44MDUgMjA4LjU5djU2LjUxN0gzMjUuNGwtNi41NiA3My4yOTktNjMuMDM1IDE3LjAxM3Y1OC44bDExNS44NjQtMzIuMTEyLjg1LTkuNTQ5IDEzLjI4LTE0OC43OTIgMS4zOC0xNS4xNzYgMTAuMjAzLTExNC4zOTNIMjU1LjgwNXY1Ni41MThoNzkuNjM5TDMzMC4zIDIwOC41OXoiLz48L3N2Zz4=';
+const icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBmaWxsPSIjZTQ0ZDI2IiBzdHJva2U9IiNiODNlMWYiIHN0cm9rZS1kYXNob2Zmc2V0PSIyLjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1taXRlcmxpbWl0PSI0LjQiIHN0cm9rZS13aWR0aD0iMzAuNiIgZD0iTTk2IDE2aDMyMGEzMiAzMiA0NSAwIDEgMzIgMzJ2Mzg0bC0xOTIgNjQtMTkyLTY0VjQ4YTMyIDMyIDEzNSAwIDEgMzItMzJaIiBwYWludC1vcmRlcj0ic3Ryb2tlIGZpbGwgbWFya2VycyIvPjxwYXRoIGZpbGw9IiNmMTY1MjkiIGQ9Im0yNTYgNDY0IDE2MC02NFY0OEgyNTZaIiBwYWludC1vcmRlcj0ic3Ryb2tlIGZpbGwgbWFya2VycyIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00MTYgNjRIOTZ2MTkyaDI1NnY2OWwtOTYgNDMtOTYtMzJ2LTMySDk2djY0bDE2MCA2NCAxNjAtNjRWMTkySDE2MHYtNjRoMjU2eiIgcGFpbnQtb3JkZXI9InN0cm9rZSBmaWxsIG1hcmtlcnMiLz48L3N2Zz4='
+const cssIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBmaWxsPSIjMjU0YmRmIiBkPSJNOTYgMTZoMzIwYTMyIDMyIDQ1IDAgMSAzMiAzMnYzODRsLTE5MiA2NC0xOTItNjRWNDhhMzIgMzIgMTM1IDAgMSAzMi0zMiIgcGFpbnQtb3JkZXI9InN0cm9rZSBmaWxsIG1hcmtlcnMiLz48cGF0aCBmaWxsPSIjMjk2NWYxIiBkPSJtMjU2IDQ2NCAxNjAtNjRWNDhIMjU2WiIgcGFpbnQtb3JkZXI9InN0cm9rZSBmaWxsIG1hcmtlcnMiLz48cGF0aCBmaWxsPSIjZjFmMWYxIiBkPSJNOTYgNjRoMzIwdjMwNGwtMTYwIDY0LTE2MC02NHYtNDhoODB2MTZsODAgMzIgMTAwLTQzdi02OUgxNzZ2LTY0aDE4MHYtNjRIOTZaIiBwYWludC1vcmRlcj0ic3Ryb2tlIGZpbGwgbWFya2VycyIvPjwvc3ZnPg==';
 // Colors
-const color1Def = '#e44d26';
-const color2Def = '#f16529';
-const color3Def = '#e44d26';
+const color1 = '#e44d26';
+const color2 = '#f16529';
+const color3 = '#e44d26';
 //
 // Allows for choosing the selector [Scratch="canvas"] to get the correct canvas.
 const canvas = Scratch.vm.renderer.canvas;
@@ -80,28 +89,18 @@ canvas.setAttribute('Scratch','canvas');
 canvas.classList.add('sc-Canvas');
 canvas.setAttribute('sc-Canvas','true');
 
-function getColor(color,num = 1) {
-  if (color == null | color == '') {return eval(`color`+num+`Def`);} else {return color;}
-}
-
 function label(name) {return {blockType: 'label', text: name};}
 
 function MI(text,value) {return {text: text, value: value}}
 
-// I should've' done this earlier 
-function makeBlock(opcode,type,text,args,color1,color2,color3,icon,hide) {
-  return {
+function makeBlock(opcode,type,text,args,extra) {
+  return Object.assign({
     opcode: opcode,
     blockType: type,
     text: text,
-    color1: getColor(color1,1),
-    color2: getColor(color2,2),
-    color3: getColor(color3,3),
-    allowDropAnywhere: true,
-    blockIconURI: icon,
     arguments: args,
-    hidefromPalette: hide
-  }
+    allowDropAnywhere: true,
+  },extra)
 }
 
 function makeButton(text,func) {
@@ -132,7 +131,7 @@ const mouse = {
 } 
 
 document.querySelectorAll('#OBHTML-scriptEditor').forEach(e => {e.remove();});
-openScriptEditor = function () {
+function openScriptEditor() {
 	const scriptEditor = document.querySelector('#OBHTML-scriptEditor');
 	if (!!document.querySelector('#OBHTML-scriptEditor')) {
 		scriptEditor.setAttribute('obhidden',!scriptEditor.getAttribute('obhidden'));
@@ -207,8 +206,8 @@ function includesArray(string,array) {
 
 function getSafeId(inId) {
     const id_list = [];
-    (``+inId).split('').forEach(c => {
-      if (includesArray(c,id_whitelist_characters) == true) {
+    (``+inId).replaceAll(' ','-').split('').forEach(c => {
+      if (includesArray(c,id_allowed_characters) == true) {
         id_list.push(c);
       } else {
         id_list.push((''+c).charCodeAt(0));
@@ -272,26 +271,43 @@ function changeFavicon(src) {
 const confirm = {
   importStyleSheets: false,
   replaceBody: false,
-  hasReplacedAllAttributes: false
+  hasReplacedAllAttributes: false,
+  hasInsertedExternalStyleSheet: false
 }
 
 function showRemoveBodyWarning(selector) {
-    if (selector.toLowerCase() == 'body' | selector.toLowerCase() == '#app' & !vm.runtime.isPackaged & !confirm.replaceBody) {
-      if (window.confirm(`Are you sure you wan't to Delete the element using the selector `+selector.toLowerCase()+`? (Whole page)\n\nThis will break mostly everything and you'll Have to reload.\n -- You will lose unsaved work!\n\nThis warning will not show when packaged`)) {
-        confirm.replaceBody = true;
-      } else {
-        confirm.replaceBody = false;
-      }
-    return confirm.replaceBody;
+  if (selector.toLowerCase() == 'body' | selector.toLowerCase() == '#app' & !vm.runtime.isPackaged & !confirm.replaceBody) {
+    if (window.confirm(`Are you sure you wan't to Delete the element using the selector `+selector.toLowerCase()+`? (Whole page)\n\nThis will break mostly everything and you'll Have to reload.\n -- You will lose unsaved work!\n\nThis warning will not show when packaged`)) {
+      confirm.replaceBody = true;
     } else {
+      confirm.replaceBody = false;
+    }
+    return confirm.replaceBody;
+  } else {
     return true;
+  }
+}
+
+function showExternalStyleSheetWarning(url) {
+  const strUrl = (''+url);
+  if (confirm.hasInsertedExternalStyleSheet == false & !strUrl.startsWith('http://localhost:') & !strUrl.startsWith('https://localhost') & !strUrl.startsWith('.') & !strUrl.startsWith('/') & !strUrl.startsWith('data:')) {
+    if (window.confirm(`WARNING!\n\nYou are attempting to insert a StyleSheet from an external site.\n\nOn certain browsers, this might allow Cross Site Scripting(XSS) attacks.\n\nI can't find many sources on if this is a real threat or not, but if you wish to proceed. Do so with caution.\n\nThis warning will not show more than once per session, and never while packaged.\n\nThis warning also won't show when connecting to local sources, such as: "./style.css" or "http://localhost:8080/style.css"\n\nDo you wish to proceed?`)) {
+      confirm.hasInsertedExternalStyleSheet = true;
+      return true;
+    } else {
+      return false;
     }
-    }
+  } else {
+    return true;
+  }
+}
 
 
 //
     
-const id_whitelist_characters = ['-',0,1,2,3,4,5,6,7,8,9,'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
+const id_allowed_characters = ['-','_',0,1,2,3,4,5,6,7,8,9,'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
+
+const cssBlockExtras = {color1:'#264de4',color2:'#2965f1',color3:'#264de4',blockIconURI:cssIcon};
 
 class OBhtml {
 
@@ -300,36 +316,58 @@ class OBhtml {
       this.styleSheets = Object.create(null);
     }
 
-    //Logging when not packaged
-    if (!Scratch.vm.runtime.isPackaged) {
-    this.log = true;
-    console.warn('(OBhtml) Logging errors.\nLogging is disabled by default when packaged.')
-    } else {
-    this.log = false;
+    if (!this.functions) {
+      this.functions = {};
     }
 
-    addEventListener('mousemove', (e) => {
+    if (!this.externalStyleSheets) {
+      this.externalStyleSheets = {};
+    }
+
+    this.currentFunction = null;
+    this.currentFunctionCheck = null
+
+    if (!this.log) {
+      this.log = {error:true};
+    }
+
+    //Logging when not packaged
+    if (!Scratch.vm.runtime.isPackaged) {
+    this.log.error = true;
+    console.warn('(OBhtml) Logging errors.\nLogging is disabled by default when packaged.')
+    } else {
+    this.log.error = false;
+    }
+
+    document.addEventListener('mousemove', (e) => {
       mouse.page.x = e.pageX;
       mouse.page.y = e.pageY;
     });
 
-    addEventListener('mouseover', (e) => {
+    document.addEventListener('mouseover', (e) => {
       mouse.hover = e.target;
     });
 
-    addEventListener('click', (e) => {
+    document.addEventListener('click', (e) => {
       mouse.click = e.target;
+      if (e.target.matches('[function]')) {
+        const getFunction = ''+e.target.getAttribute('function');
+        const getArgs = ''+e.target.getAttribute('args');
+        this.currentFunction = getFunction;
+        this.currentFunctionCheck = getFunction;
+        this.functions[getFunction] = getArgs;
+      }
     });
 
-    addEventListener('dblclick', (e) => {
+    document.addEventListener('dblclick', (e) => {
       mouse.dblClick = e.target;
     });
 
-    addEventListener('focus', e => {
+    document.addEventListener('focus', e => {
       mouse.other.focus = e.target;
     });
 
-    addEventListener('blur', e => {
+    document.addEventListener('blur', e => {
       mouse.other.blur = e.target;
     });
   }
@@ -338,21 +376,13 @@ class OBhtml {
     return {
       id: 'OBHTML',
       name: 'HTML5',
-      color1: color1Def,
-      color2: color2Def,
-      color3: color3Def,
+      color1: color1,
+      color2: color2,
+      color3: color3,
       menuIconURI: icon,
       blocks: [
-        {
-          blockType: BT.BUTTON,
-          text: 'Info',
-          func: 'Info'
-        },
-        {
-          blockType: BT.BUTTON,
-          text: 'Selectors',
-          func: 'Selectors'
-        },
+        makeButton('Info','Info'),
+        makeButton('Selectors','Selectors'),
         makeButton('Online Warning!','onlineWarning'),
         label('HTML'),
         {
@@ -367,11 +397,7 @@ class OBhtml {
             }
           }
         },
-        {
-          opcode: 'insertHTML',
-          blockType: BT.COMMAND,
-          text: 'Insert html: [html] in [selector] #:[index] at: [position] ',
-          arguments: {
+        makeBlock('insertHTML', BT.COMMAND, 'Insert html: [html] in [selector] #:[index] at: [position] ', {
             selector: {
               type: AT.STRING,
               defaultValue: '[Scratch="canvas"]'
@@ -388,35 +414,23 @@ class OBhtml {
               type: AT.NUMBER,
               defaultValue: '1'
             }
+        }),
+        makeBlock('removeHTML', BT.COMMAND, 'Remove selector:[selector] #:[index] from page', {
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: AT.NUMBER,
+            defaultValue: '1'
           }
-        },
-        {
-          opcode: 'removeHTML',
-          blockType: BT.COMMAND,
-          text: 'Remove selector:[selector] #:[index] from page',
-          arguments: {
-            selector: {
-              type: AT.STRING,
-              defaultValue: '#span1'
-            },
-            index: {
-              type: AT.NUMBER,
-              defaultValue: '1'
-            }
-          } 
-        },
-        {
-          opcode: 'removeAllHTML',
-          blockType: BT.COMMAND,
-          text: 'Remove all matching selector:[selector] from page',
-          hideFromPalette: false,
-          arguments: {
-            selector: {
-              type: AT.STRING,
-              defaultValue: '#span1'
-            }
-          } 
-        },
+        }),
+        makeBlock('removeAllHTML', BT.COMMAND, 'Remove all matching selector:[selector] from page', {
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          }
+        }),
         makeBlock('countSelector',BT.REPORTER,'Count [selector]',{
           selector: {
             type: AT.STRING,
@@ -424,25 +438,20 @@ class OBhtml {
           }
         }),
         BR,
-        {
-          opcode: 'setInnerHTML',
-          blockType: BT.COMMAND,
-          text: 'Set inner html of: [selector] #:[index] to: [html] ',
-          arguments: {
-            selector: {
-              type: AT.STRING,
-              defaultValue: '#span1'
-            },
-            html: {
-              type: AT.STRING,
-              defaultValue: 'Hello!'
-            },
-            index: {
-              type: AT.NUMBER,
-              defaultValue: '1'
-            }
+        makeBlock('setInnerHTML', BT.COMMAND, 'Set inner html of: [selector] #:[index] to: [html] ', {
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          html: {
+            type: AT.STRING,
+            defaultValue: 'Hello!'
+          },
+          index: {
+            type: AT.NUMBER,
+            defaultValue: '1'
           }
-        },
+        }),
         makeBlock('setInnerHTMLAll',BT.COMMAND,'Set inner html of all matching selector: [selector] to: [html]',{
           selector: {
               type: AT.STRING,
@@ -453,22 +462,16 @@ class OBhtml {
               defaultValue: 'Hello!'
             },
         }),
-        {
-            opcode: 'getInnerHTML',
-            blockType: BT.REPORTER,
-            allowDropAnywhere: true,
-            text: 'Get inner html from selector: [selector] #:[index]',
-            arguments: {
-                selector: {
-                    type: AT.STRING,
-                    defaultValue: '#span1'
-                },
-                index: {
-                  type: AT.NUMBER,
-                  defaultValue: '1'
-                }
-            }
-        },
+        makeBlock('getInnerHTML', BT.REPORTER, 'Get inner html from selector: [selector] #:[index]', {
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: AT.NUMBER,
+            defaultValue: '1'
+          }
+        }),
         BR,
         makeBlock('setOuterHTML',BT.COMMAND,'Set outer html of: [selector] #:[index] to: [html] ',{
             selector: {
@@ -477,22 +480,22 @@ class OBhtml {
             },
             html: {
               type: AT.STRING,
-              defaultValue: 'Hello!'
+              defaultValue: '<span id="span1" style="position: absolute;">Hello!</span>'
             },
             index: {
               type: AT.NUMBER,
               defaultValue: '1'
             }
-          }),
-          makeBlock('setOuterHTMLAll',BT.COMMAND,'Set outer html of all matching selector: [selector] to: [html]',{
-          selector: {
-              type: AT.STRING,
-              defaultValue: '#span1'
-            },
-            html: {
-              type: AT.STRING,
-              defaultValue: 'Hello!'
-            },
+        }),
+        makeBlock('setOuterHTMLAll',BT.COMMAND,'Set outer html of all matching selector: [selector] to: [html]',{
+        selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          html: {
+            type: AT.STRING,
+            defaultValue: '<span id="span1" style="position: absolute;">Hello!</span>'
+          },
         }),
         makeBlock('getOuterHTML',BT.REPORTER,'Get outer html from selector: [selector] #:[index]',{
                 selector: {
@@ -503,8 +506,8 @@ class OBhtml {
                   type: AT.NUMBER,
                   defaultValue: '1'
                 }
-            }),
-            BR,
+        }),
+        BR,
         makeBlock('setValue',BT.COMMAND,`Set value of selector: [selector] #:[index] to: [value]`,{
           selector: {
             type: AT.STRING,
@@ -651,6 +654,50 @@ class OBhtml {
               menu: 'info'
             }
         }),
+        makeBlock('checkStatus',BT.HAT,'When selector: [selector] #:[index] [status]',{
+          selector: {
+              type: AT.STRING,
+              defaultValue: '#span1'
+            },
+            index: {
+              type: AT.NUMBER,
+              defaultValue: '1'
+            },
+            status: {
+              type: AT.STRING,
+              menu: 'status'
+            }
+        }),
+        makeBlock('checkStatusAny',BT.HAT,'When any matching selector: [selector] [status]',{
+          selector: {
+              type: AT.STRING,
+              defaultValue: '#span1'
+            },
+            status: {
+              type: AT.STRING,
+              menu: 'status'
+            }
+        }),
+        makeBlock('checkMatching',BT.HAT,'When selector: [selector] #:[index] matches: [selectorQuery]',{
+          selector: ARG(AT.STRING, '#span1'),
+          index: ARG(AT.NUMBER, 1),
+          selectorQuery: ARG(AT.STRING, ':hover')
+        },{hideFromPalette:true}),
+        makeBlock('checkMatchingAny',BT.HAT,'When any matching selector: [selector] matches: [selectorQuery]',{
+          selector: ARG(AT.STRING, '#span1'),
+          selectorQuery: ARG(AT.STRING, ':hover')
+        },{hideFromPalette:true}),
+        label('Functions'),
+        makeButton('Functions','functionInfo'),
+        makeBlock('checkFunction',BT.HAT,'When any element with function: [function] is clicked', {
+          function: ARG(AT.STRING,'function1')
+        }),
+        makeBlock('functionChecked',BT.BOOLEAN,'Any element with function: [function] clicked?', {
+          function: ARG(AT.STRING,'function1')
+        }),
+        makeBlock('getFunctionArgs',BT.REPORTER,'Data from function: [function]',{
+          function: ARG(AT.STRING,'function1')
+        }),
         BR,
         // mouse
         makeBlock('getMouseDown',BT.BOOLEAN,'Mouse down?'),
@@ -764,29 +811,24 @@ class OBhtml {
           }
         }),
         BR,
-        {
-          opcode: 'setAttribute',
-          blockType: BT.COMMAND,
-          text: 'Set attribute:[attribute] of: [selector] #:[index] to: [value]',
-          arguments: {
-            attribute: {
-              type: AT.STRING,
-              defaultValue: 'title'
-            },
-            selector: {
-              type: AT.STRING,
-              defaultValue: '#span1'
-            },
-            index: {
-              type: AT.NUMBER,
-              defaultValue: '1'
-            },
-            value: {
-              type: AT.STRING,
-              defaultValue: 'I have a Title now!'
-            }
+        makeBlock('setAttribute', BT.COMMAND, 'Set attribute:[attribute] of: [selector] #:[index] to: [value]', {
+          attribute: {
+            type: AT.STRING,
+            defaultValue: 'title'
+          },
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: AT.NUMBER,
+            defaultValue: '1'
+          },
+          value: {
+            type: AT.STRING,
+            defaultValue: 'I have a Title now!'
           }
-        },
+        }),
         makeBlock('setAttributeAll',BT.COMMAND,'Set attribute: [attribute] for all matching selector: [selector] to: [value]',{
                 attribute: {
                     type: AT.STRING,
@@ -856,7 +898,7 @@ class OBhtml {
               type: AT.NUMBER,
               defaultValue: '1'
             }
-          }),
+        }),
         makeBlock('setAttributeAllJSON',BT.COMMAND,'Set attributes from JSON: [json] for all matching selector: [selector]',{
                 json: {
                     type: AT.STRING,
@@ -893,26 +935,20 @@ class OBhtml {
           }
         }),
         BR,
-        {
-            opcode: 'getAttribute',
-            blockType: BT.REPORTER,
-            allowDropAnywhere: true,
-            text: 'Get attribute: [attribute] from selector: [selector] #:[index]',
-            arguments: {
-                attribute: {
-                    type: AT.STRING,
-                    defaultValue: 'title'
-                },
-                selector: {
-                    type: AT.STRING,
-                    defaultValue: '#span1'
-                },
-                index: {
-                  type: AT.NUMBER,
-                  defaultValue: '1'
-                }
-            }
-        },
+        makeBlock('getAttribute', BT.REPORTER, 'Get attribute: [attribute] from selector: [selector] #:[index]', {
+          attribute: {
+            type: AT.STRING,
+            defaultValue: 'title'
+          },
+          selector: {
+            type: AT.STRING,
+            defaultValue: '#span1'
+          },
+          index: {
+            type: AT.NUMBER,
+            defaultValue: '1'
+          }
+        }),
         makeBlock('getAttributeAllCertain',BT.REPORTER,'Get attribute:[attribute] from all matching selector:[selector]',{
           attribute: {
             type: AT.STRING,
@@ -955,18 +991,25 @@ class OBhtml {
           }
         }),
         makeBlock('getIcon',BT.REPORTER,'Page icon'),
+        makeBlock('getBrowserInfo',BT.REPORTER, 'Get browser info'),
 
         BR,
-        makeButton('Note','SanitizeNote'),
+        makeButton('Note','sanitizeNote'),
         makeBlock('sanitize',BT.REPORTER,'Sanitize: [input]',{
           input: {
             type: AT.STRING,
-            defaultValue: 'Some Possibly unsafe HTML'
+            defaultValue: '<sus><span>Some Possibly unsafe HTML</span></sus>'
+          }
+        }),
+        makeBlock('sanitizeText',BT.REPORTER,'Sanitize text: [input]',{
+          input: {
+            type: AT.STRING,
+            defaultValue: '<span>I want to be TEXT!</span>'
           }
         }),
         //CSS
         label('CSS'),
-        // this is nice
+        makeButton('Ids','styleSheetsInfo'),
         makeBlock('setStyleSheet',BT.COMMAND,'Set StyleSheet with id:[id] to css:[css]',{
             css: {
               type: AT.STRING,
@@ -976,28 +1019,42 @@ class OBhtml {
               type: AT.STRING,
               defaultValue: 'css-1'
             }
-          },'#264de4','#2965f1','#264de4',cssIcon),
+          },cssBlockExtras),
         makeBlock('removeStyleSheet',BT.COMMAND,'Remove StyleSheet with id:[id]',{
           id: {
             type: AT.STRING,
             defaultValue: 'css-1'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('removeAllStyleSheets',BT.COMMAND,'Remove All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
+        makeBlock('removeAllStyleSheets',BT.COMMAND,'Remove All StyleSheets',{},cssBlockExtras),
         makeBlock('getSpecificStyleSheet',BT.REPORTER,'StyleSheet: [id]',{
           id: {
             type: AT.STRING,
             defaultValue: 'css-1'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('getStyleSheets',BT.REPORTER,'All StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
+        makeBlock('getStyleSheets',BT.REPORTER,'All StyleSheets',{},cssBlockExtras),
         makeBlock('importStyleSheets',BT.COMMAND,'Import StyleSheets from:[input] ',{
           input: {
             type: AT.STRING,
             defaultValue: '{}'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
-        makeBlock('exportStyleSheets',BT.REPORTER,'Export StyleSheets',{},'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
+        makeBlock('exportStyleSheets',BT.REPORTER,'Export StyleSheets',{},cssBlockExtras),
+        makeBlock('getSafeStyleSheetId',BT.REPORTER,'Get safe StyleSheet id: [id]',{
+          id: ARG(AT.STRING,'css 1')
+        }, cssBlockExtras),
+        BR,
+        makeButton('Imported CSS','externalCSSInfo'),
+        makeBlock('importStyleSheetFromUrl',BT.COMMAND,'Import StyleSheet with id: [id] from URL: [url]',{
+          id: ARG(AT.STRING,'external-css'),
+          url: ARG(AT.STRING,'data:text/css;base64,I3NwYW4xIHtjb2xvcjogcmVkO30=')
+        },cssBlockExtras),
+        makeBlock('removeExternalStyleSheet',BT.COMMAND,'Remove imported StyleSheet with id: [id]',{
+          id: ARG(AT.STRING,'external-css')
+        },cssBlockExtras),
+        makeBlock('removeAllExternalStyleSheets',BT.COMMAND,'Remove all imported StyleSheets',{},cssBlockExtras),
+        makeBlock('getExternalStyleSheets',BT.REPORTER,'Imported StyleSheets',{},cssBlockExtras),
         BR,
         makeBlock('setStyle',BT.COMMAND,'Set style:[style] of: [selector] #: [index] to:[value]',{
           style: {
@@ -1016,7 +1073,7 @@ class OBhtml {
             type: AT.STRING,
             defaultValue: 'red'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
         makeBlock('setStyleAll',BT.COMMAND,'Set style:[style] of all elements matching: [selector] to:[value]',{
           style: {
             type: AT.STRING,
@@ -1030,7 +1087,7 @@ class OBhtml {
             type: AT.STRING,
             defaultValue: 'red'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
         makeBlock('getStyle',BT.REPORTER,'Style: [style] of: [selector] #: [index]',{
           style: {
             type: AT.STRING,
@@ -1044,7 +1101,7 @@ class OBhtml {
             type: AT.NUMBER,
             defaultValue: 1,
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
         makeBlock('getStyleAll',BT.REPORTER,'Style: [style] of all matching: [selector]',{
           style: {
             type: AT.STRING,
@@ -1054,7 +1111,7 @@ class OBhtml {
             type: AT.STRING,
             defaultValue: '#span1'
           }
-        },'#264de4','#2965f1','#264de4',cssIcon),
+        },cssBlockExtras),
         // makeBlock('checkImportance',BT.BOOLEAN,'Is style: [style] of [selector] # [index] important?',{
         //   style: {
         //     type: AT.STRING,
@@ -1068,31 +1125,19 @@ class OBhtml {
         //     type: AT.NUMBER,
         //     defaultValue: 1,
         //   }
-        // },'#264de4','#2965f1','#264de4',cssIcon),
+        // },cssBlockExtras),
         label('Text editor'),
         makeBlock('openTextEditor',BT.COMMAND,'Open text editor'),
         makeBlock('closeTextEditor',BT.COMMAND,'Close text editor'),
+        makeBlock('textEditorOpen',BT.BOOLEAN,'Text editor open?'),
         makeBlock('setTextEditorValue',BT.COMMAND,'Set text editor value to [value]', {
           value: ARG(AT.STRING,'')
         }),
         makeBlock('getTextEditorValue',BT.REPORTER,'Get text editor value'),
         // licence
         BR,
-        {
-          blockType: BT.BUTTON,
-          text: 'Apache Licence',
-          func: 'ApacheLicence'
-        },
-        {
-          blockType: BT.BUTTON,
-          text: 'Mozilla Public Licence',
-          func: 'MozillaPublicLicence'
-        },
-        {
-          blockType: BT.BUTTON,
-          text: 'CC Attribution 3.0 Unported',
-          func: 'CC3AU'
-        },
+        makeButton('Apache Licence','ApacheLicence'),
+        makeButton('Mozilla Public Licence','MozillaPublicLicence'),
         // End licence
         label('Ver: '+ver+'')
       ],
@@ -1193,7 +1238,7 @@ class OBhtml {
 // functions
 
   toggleLog(args) {
-  this.log = args.onOff;
+    this.log.error = !!(args.onOff == 'On' | args.onOff == true ? true : false);
   }
 
   openTextEditor() {
@@ -1224,26 +1269,37 @@ class OBhtml {
     }
   }
 
+  textEditorOpen() {
+    try {
+      const editor = document.querySelector('#OBHTML-scriptEditor');
+      if (editor != null) {
+        return !!editor.checkVisibility();
+      } else {
+        return false;
+      }
+    } catch (error) {if(this.log.error == true) {console.error(error);}; return false;};
+  }
+
   // HTML
   
   insertHTML(args) {
     try {
       document.querySelectorAll(args.selector)[args.index - 1].insertAdjacentHTML(args.position,purify(args.html));
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   setInnerHTML(args) {
       try {
     if (showRemoveBodyWarning(args.selector))
       document.querySelectorAll(args.selector)[args.index - 1].innerHTML = (purify(args.html));
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   setInnerHTMLAll(args) {
     try {
     if (showRemoveBodyWarning(args.selector))
-    document.querySelectorAll(args.selector).forEach(e => {try {e.innerHTML = purify(args.html);} catch (error) {if(this.log) console.error(error);}});
-    } catch (error) {if(this.log) console.error(error);}
+    document.querySelectorAll(args.selector).forEach(e => {try {e.innerHTML = purify(args.html);} catch (error) {if(this.log.error == true) console.error(error);}});
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getInnerHTML(args) {
@@ -1257,14 +1313,14 @@ class OBhtml {
       try {
     if (showRemoveBodyWarning(args.selector))
       document.querySelectorAll(args.selector)[args.index - 1].outerHTML = (purify(args.html));
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   setOuterHTMLAll(args) {
     try {
     if (showRemoveBodyWarning(args.selector))
-    document.querySelectorAll(args.selector).forEach(e => {try {e.outerHTML = purify(args.html);} catch (error) {if(this.log) console.error(error);}});
-    } catch (error) {if(this.log) console.error(error);}
+    document.querySelectorAll(args.selector).forEach(e => {try {e.outerHTML = purify(args.html);} catch (error) {if(this.log.error == true) console.error(error);}});
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getOuterHTML(args) {
@@ -1303,7 +1359,7 @@ class OBhtml {
   setAttributeAll(args) {
     try {
       document.querySelectorAll(args.selector).forEach((element) => (element).setAttribute(args.attribute,args.value));
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   setAttributeJSON(args) {
@@ -1312,9 +1368,9 @@ class OBhtml {
       Object.keys(attr).forEach(a => {
         try {
           document.querySelectorAll(args.selector)[args.index - 1].setAttribute(a,attr[a]);
-        } catch (error) {if(this.log) console.error(error);}
+        } catch (error) {if(this.log.error == true) console.error(error);}
       });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   setAttributeAllJSON(args) {
@@ -1323,9 +1379,9 @@ class OBhtml {
       Object.keys(attr).forEach(a => {
         try {
           document.querySelectorAll(args.selector).forEach(e => {e.setAttribute(a,attr[a])});
-        } catch (error) {if(this.log) console.error(error);}
+        } catch (error) {if(this.log.error == true) console.error(error);}
       });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   // set
@@ -1333,7 +1389,7 @@ class OBhtml {
   removeAttribute(args) {
     try {
       document.querySelectorAll(args.selector)[args.index - 1].removeAttribute(args.attribute)
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   removeAttributeAll(args) {
@@ -1341,7 +1397,7 @@ class OBhtml {
       document.querySelectorAll(args.selector).forEach(e => {
         e.removeAttribute(args.attribute);
       });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   // removeAllAttributes(args) {
@@ -1351,7 +1407,7 @@ class OBhtml {
   //   Object.keys(attr).forEach(a => {
   //     element.removeAttribute(a);
   //   });
-  //   } catch (error) {if(this.log) console.error(error);}
+  //   } catch (error) {if(this.log.error == true) console.error(error);}
   // }
 
   // removeAllAttributesAll(args) {
@@ -1362,7 +1418,7 @@ class OBhtml {
   //       element.removeAttribute(a);
   //     });
   //   });
-  //   } catch (error) {if(this.log) console.error(error);}
+  //   } catch (error) {if(this.log.error == true) console.error(error);}
   // }
   
   removeAttributeARRAY(args) {
@@ -1371,9 +1427,9 @@ class OBhtml {
       attr.forEach(a => {
         try {
           document.querySelectorAll(args.selector)[args.index - 1].removeAttribute(a);
-        } catch (error) {if(this.log) console.error(error);}
+        } catch (error) {if(this.log.error == true) console.error(error);}
       });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   removeAttributeAllARRAY(args) {
@@ -1382,22 +1438,22 @@ class OBhtml {
       attr.forEach(a => {
         try {
           document.querySelectorAll(args.selector).forEach(e => {e.removeAttribute(a)});
-        } catch (error) {if(this.log) console.error(error);}
+        } catch (error) {if(this.log.error == true) console.error(error);}
       });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getAttribute(args) {
     try { return purify(document.querySelectorAll(args.selector)[args.index - 1].getAttribute(args.attribute));}
     catch (error) {
-    return ''; if(this.log) console.error(error);
+    return ''; if(this.log.error == true) console.error(error);
     }
   }
 
   getAttributeAll(args) {
     try {
       return getAllAttributes(document.querySelectorAll(args.selector)[args.index - 1]);
-    } catch (error) {return '{}'; if(this.log) console.error(error);}
+    } catch (error) {return '{}'; if(this.log.error == true) console.error(error);}
   }
 
   getAttributeAllAll(args) {
@@ -1408,7 +1464,7 @@ class OBhtml {
     out.push(getAllAttributes(e));
     });
     return JSON.stringify(out);
-    } catch (error) {return '[]'; if(this.log) console.error(error);}
+    } catch (error) {return '[]'; if(this.log.error == true) console.error(error);}
   }
 
   getAttributeAllCertain(args) {
@@ -1422,7 +1478,7 @@ class OBhtml {
         }
       });
       return JSON.stringify(out);
-    } catch (error) {return '[]'; if(this.log) console.error(error);}
+    } catch (error) {return '[]'; if(this.log.error == true) console.error(error);}
   }
 
   // classes
@@ -1441,7 +1497,7 @@ class OBhtml {
       element.classList.remove(cl);
       }
     });
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   changeClassAll(args) {
@@ -1455,7 +1511,7 @@ class OBhtml {
       element.classList.remove(cl);
       }
     });});
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getClassList(args) {
@@ -1466,7 +1522,7 @@ class OBhtml {
         out.push(cl);
       });
       return JSON.stringify(out);
-    } catch (error) {return [];if(this.log) console.error(error);} 
+    } catch (error) {return '[]';if(this.log.error == true) console.error(error);} 
   }
 
   getClassListAll(args) {
@@ -1480,20 +1536,20 @@ class OBhtml {
       fullout.push(out);
       });
       return JSON.stringify(fullout);
-    } catch (error) {return []; if(this.log) console.error(error);}
+    } catch (error) {return '[]'; if(this.log.error == true) console.error(error);}
   }
   
   countSelector(args) {
     try {
     return document.querySelectorAll(args.selector).length;
-    } catch (error) {return 0;if(this.log) console.error(error);} 
+    } catch (error) {return 0;if(this.log.error == true) console.error(error);} 
   }
 
   getValue(args) {
     try {
       return purify(document.querySelectorAll(args.selector)[args.index - 1].value);
     } catch (error) {
-      return ''; if(this.log) console.error(error);
+      return ''; if(this.log.error == true) console.error(error);
     }
   }
 
@@ -1501,18 +1557,18 @@ class OBhtml {
     try {
       if (document.querySelectorAll(args.selector)[args.index - 1]) {
       document.querySelectorAll(args.selector)[args.index - 1].value = args.value;
-      } else {if(this.log) console.error('Selector: "' + args.selector + '" #:' + args.index + ' does not exist.')}
+      } else {if(this.log.error == true) console.error('Selector: "' + args.selector + '" #:' + args.index + ' does not exist.')}
     } catch {
-      if(this.log) console.error(error);
+      if(this.log.error == true) console.error(error);
     }
   }
 
   setValueAll(args) {
     try {
       if (document.querySelectorAll(args.selector)) {
-      document.querySelectorAll(args.selector).forEach(e => {try {e.value = args.value;} catch (error) {if(this.log) console.error(error);}});
+      document.querySelectorAll(args.selector).forEach(e => {try {e.value = args.value;} catch (error) {if(this.log.error == true) console.error(error);}});
       } else {console.error('No elements matching selector: "' + args.selector + '" exist.')}
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getStatus(args) {
@@ -1536,7 +1592,7 @@ class OBhtml {
       if (args.status == 'checked') {
       return !!e.checked;
       }
-    } catch (error) {return false; if(this.log) console.error(error);}
+    } catch (error) {return false; if(this.log.error == true) console.error(error);}
   }
 
   getAnyStatus(args) {
@@ -1569,22 +1625,76 @@ class OBhtml {
       } else {
       return false;
       }
-    } catch (error) {return false; if(this.log) console.error(error);}
+    } catch (error) {return false; if(this.log.error == true) console.error(error);}
+  }
+
+  checkStatus(args) {
+    try {
+      const e = document.querySelectorAll(args.selector)[args.index - 1];
+      if (args.status == 'hovered') {
+      return !!e.matches(':hover');
+      } else
+      if (args.status == 'clicked' | args.status == 'mouseDown') {
+      return !!e.matches(':hover:active');
+      } else
+      if (args.status == 'focused') {
+      return !!e.matches(':focus');
+      } else
+      if (args.status == 'visible') {
+      return !!e.checkVisibility();
+      } else
+      if (args.status == 'exists') {
+      return !!document.querySelectorAll(args.selector)[args.index - 1];
+      }
+      if (args.status == 'checked') {
+      return !!e.checked;
+      }
+    } catch (error) {return false; if(this.log.error == true) console.error(error);}
+  }
+
+  checkStatusAny(args) {
+    try {
+      const e = document.querySelectorAll(args.selector);
+      const length = e.length;
+      if (length > 0) {
+      let check = 0;
+      e.forEach((element) => {
+      if (args.status == 'hovered') {
+      if(!!(element).matches(':hover')) {check++};
+      } else
+      if (args.status == 'clicked' | args.status == 'mouseDown') {
+      if(!!(element).matches(':hover:active')) {check++};
+      } else
+      if (args.status == 'focused') {
+      if(!!(element).matches(':focus')) {check++};
+      } else
+      if (args.status == 'visible') {
+      if(!!(element).checkVisibility()) {check++};
+      } else
+      if (args.status == 'exists') {
+      if(!!(element)) {check++};
+      }
+      if (args.status == 'checked') {
+      if ((element).checked) {check++};
+      }
+      });
+      return !!check > 0;
+      } else {
+      return false;
+      }
+    } catch (error) {return false; if(this.log.error == true) console.error(error);}
   }
 
   elementDBLClickedStatus(args) {
     try {
-      let out = null;
       if (args.click == '0') {
-      out = ''+mouse.click;
+      return JSON.parse(getAllAttributes(mouse.click))[args.attribute] ?? '';
       } else if (args.click == '1') {
-      out = ''+mouse.dblClick;
-      } else if (args.click == '2'); {
-      out = ''+mouse.hover;
+      return JSON.parse(getAllAttributes(mouse.dblClick))[args.attribute] ?? '';
+      } else if (args.click == '2') {
+      return JSON.parse(getAllAttributes(mouse.hover))[args.attribute] ?? ''; 
       }
-      out = out.getAttribute(args.attribute);
-      return out == null ? '' : out;
-    } catch (error) {return ''; if(this.log) console.error(error);};
+    } catch (error) {return ''; if(this.log.error == true) console.error(error);}
   }
   
   elementDBLClickedStatusAll(args) {
@@ -1596,23 +1706,49 @@ class OBhtml {
       } else if (args.click == '2') {
       return getAllAttributes(mouse.hover); 
       }
-    } catch (error) {return {}; if(this.log) console.error(error);}
+    } catch (error) {return '{}'; if(this.log.error == true) console.error(error);}
   }
 
   matches(args) {
     try {
       return !!document.querySelectorAll(args.selector)[args.index - 1].matches(args.selectorQuery);
-    } catch (error) {return 'false'; if(this.log) console.error(error);}
+    } catch (error) {return 'false'; if(this.log.error == true) console.error(error);}
   }
 
-  // TODO
-  // This should use for instead, I just don't feel like it rn...
   matchesAny(args) {
     try {
       let matches = 0;
-      document.querySelectorAll(args.selector).forEach(e => {if (e.matches(args.selectorQuery)) matches ++});
+      const elements = document.querySelectorAll(args.selector);
+      for (let e = 0; e < elements.length & matches < 1;e++) {
+        if (elements[e].matches(args.selectorQuery)) {
+          matches ++;
+        }
+      };
       return !!matches > 0;
-    } catch (error) {return 'false'; if(this.log) console.error(error);}
+    } catch (error) { if(this.log.error == true) {console.error(error)};return 'false';}
+  }
+
+  checkMatching(args) {
+    try {
+      if (!!document.querySelectorAll(args.selector).length > 0) {
+        return !!document.querySelectorAll(args.selector)[args.index - 1].matches(args.selectorQuery);
+      } else {
+        return false;
+      }
+    } catch (error) {if(this.log.error == true) {console.error(error); return false;};};
+  }
+
+  checkMatchingAny(args) {
+    try {
+      let matches = 0;
+      const elements = document.querySelectorAll(args.selector);
+      for (let e = 0; e < elements.length & matches < 1;e++) {
+        if (elements[e].matches(args.selectorQuery)) {
+          matches ++;
+        }
+      };
+      return !!matches > 0;
+    } catch (error) { if(this.log.error == true) {console.error(error)};return 'false';}
   }
 
   focusBlur(args) {
@@ -1623,14 +1759,14 @@ class OBhtml {
       } else {
       e.blur();
       }
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   showHide(args) {
     try {
       const e = document.querySelectorAll(args.selector)[args.index - 1]; 
       e.hidden = args.type == 'hide';
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   showHideAll(args) {
@@ -1638,13 +1774,13 @@ class OBhtml {
       const bool = args.type == 'hide';
       const e = document.querySelectorAll(args.selector);
       e.forEach(e => {e.hidden = bool;});
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   clickElement(args) {
     try {
       document.querySelectorAll(args.selector)[args.index - 1].click();
-    } catch (error) {if(this.log) console.error(error)}
+    } catch (error) {if(this.log.error == true) console.error(error)}
   }
 
   getElementInfo(args) {
@@ -1659,13 +1795,13 @@ class OBhtml {
       if (args.info == 'bottom') {return eb.bottom;} else
       if (args.info == 'right') {return eb.right;}
       } else {return '0';}
-    } catch (error) {return ''; if(this.log) console.error(error)}
+    } catch (error) {return ''; if(this.log.error == true) console.error(error)}
   }
 
   getMouseDown() {
     try {
       return !!document.querySelector('html').matches(':hover:active');
-    } catch (error) {return false; if(this.log) console.error(error);}
+    } catch (error) {return false; if(this.log.error == true) console.error(error);}
   }
 
   getMouseData(args) {
@@ -1675,7 +1811,7 @@ class OBhtml {
       } else {
         return mouse.page.y;
       }
-    } catch (error) {return '0'; if(this.log) console.error(error);}
+    } catch (error) {return '0'; if(this.log.error == true) console.error(error);}
   }
 
   getMouseDataElement(args) {
@@ -1686,17 +1822,33 @@ class OBhtml {
       } else {
       return clamp(map(mouse.page.y,element.top,element.top + element.height,0,element.height),0,element.height);
       }
-    } catch (error) {return '0'; if(this.log) console.error(error);}
+    } catch (error) {return '0'; if(this.log.error == true) console.error(error);}
   }
 
   sanitize(args) {
-    return purify(args.input);
+    try {
+      return purify(args.input);
+    } catch (error) {
+      if(this.log.error == true) {console.error(error);}
+      // TODO 🤔
+      // Should this return the input string?
+      return '';
+    }
+  }
+
+  sanitizeText(args) {
+    try {
+      return purifyText(args.input);
+    } catch (error) {if(this.log.error == true) {console.error(error);};
+      // TODO
+      return '';
+    };
   }
 
   setTitle(args) {
     try {
       document.title = args.title;
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getTitle() {
@@ -1710,38 +1862,53 @@ class OBhtml {
   setIcon(args) {
     try {
       changeFavicon(args.url);
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getIcon() {
     try {
       const icon = document.head.querySelector('#dynamic-favicon').href;
       return !!icon ? icon : '';
-    } catch (error) {return ''; if(this.log) console.error(error)}
+    } catch (error) {return ''; if(this.log.error == true) console.error(error)}
+  }
+
+  getBrowserInfo() {
+    try {
+      const out = {};
+      try {out['userAgent'] = window.navigator.userAgent;} catch (error) {if (this.error) {console.error(error);};};
+      try {out['brands'] = window.navigator.userAgentData.brands;} catch (error) {if(this.log.error == true) {console.error(error);};};
+      return JSON.stringify(out);;
+    } catch (error) {if(this.log.error == true) {console.error(error);}; return '';};
   }
 
   // CSS
 
+  // StyleSheets
   setStyleSheet(args) {
-    const id = `OB-StyleSheets-`+getSafeId(args.id);
+    args.id = getSafeId(args.id);
+    const id = `OB-StyleSheets-`+args.id;;
     try {
     document.querySelectorAll(`#`+id+``).forEach((element) => (element).remove());
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
     try {
-    document.head.insertAdjacentHTML('beforeend',purifyCSS(`<style id="`+id+`">`+args.css+`</style>`));
-    this.styleSheets[args.id] = args.css;
-    } catch (error) {if(this.log) console.error(error);}
+    const sheet = document.createElement('style');
+    sheet.id = id;
+    sheet.innerText = purifyText(``+args.css);
+    document.head.insertAdjacentElement('beforeend',sheet);
+    this.styleSheets[args.id] = purifyText(''+args.css);
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   removeStyleSheet(args) {
-    const id = `#OB-StyleSheets-`+getSafeId(args.id);
+    args.id = getSafeId(args.id);;
+    const id = `#OB-StyleSheets-`+args.id;
     try {
       document.querySelectorAll(id).forEach((element) => (element).remove())
       delete this.styleSheets[args.id];
     } catch (error) {}
   }
 
-  removeAllStyleSheets(args) {
+  removeAllStyleSheets() {
     const ids = Object.keys(this.styleSheets);
     try {
     ids.forEach(id => {
@@ -1751,13 +1918,13 @@ class OBhtml {
     } catch {}
     });
     this.styleSheets = Object.create(null);
-    } catch (error) {if(this.log) console.error(error);}
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getStyleSheets(args) {
     try {
         return JSON.stringify(Object.keys(this.styleSheets)) ?? '[]';
-      } catch (error) {if(this.log) console.error(error); return '';}
+      } catch (error) {if(this.log.error == true) console.error(error); return '';}
   }
 
   importStyleSheets(args) {
@@ -1775,32 +1942,88 @@ class OBhtml {
   exportStyleSheets() {
     try {
       return JSON.stringify(this.styleSheets);
-    } catch (error) { if(this.log) console.error(error);return '{}';}
+    } catch (error) { if(this.log.error == true) console.error(error);return '{}';}
   }
 
   getSpecificStyleSheet(args) {
     try {
-      return purify(this.styleSheets[args.id]) ?? '';
-    } catch (error) { if(this.log) console.error(error); return '';}
+      args.id = getSafeId(args.id);
+      return purifyText(this.styleSheets[args.id]) ?? '';
+    } catch (error) { if(this.log.error == true) console.error(error); return '';}
   }
 
+  getSafeStyleSheetId(args) {
+    return getSafeId(args.id);
+  }
+  //
+
+  // External CSS
+
+  importStyleSheetFromUrl(args) {
+    try {
+      if (showExternalStyleSheetWarning(args.url)) {
+        args.id = getSafeId(args.id);
+        if (Object.keys(this.externalStyleSheets).includes(args.id)) {
+          this.removeExternalStyleSheet({id:args.id});
+        }
+        const link = document.createElement('link');
+        link.id = 'OBHTML-EXTERNAL-CSS-'+args.id;
+        link.classList.add('OBHTML-EXTERNAL-CSS');
+        link.rel = 'stylesheet';
+        link.href = args.url;
+        this.externalStyleSheets[args.id] = link;
+        document.head.insertAdjacentElement('beforeend',link);
+      }
+    } catch (error) {if(this.log.error == true) {console.error(error);};};
+  }
+
+  removeExternalStyleSheet(args) {
+    try {
+      args.id = getSafeId(''+args.id);
+      if (Object.keys(this.externalStyleSheets).includes(args.id)) {
+        this.externalStyleSheets[args.id].remove();
+        delete this.externalStyleSheets[args.id];
+      }
+    } catch (error) {if(this.log.error == true) {console.error(error);};};
+  }
+
+  removeAllExternalStyleSheets() {
+    try {
+      Object.keys(this.externalStyleSheets).forEach(sheet => {
+        this.externalStyleSheets[sheet].remove();
+        delete this.externalStyleSheets[sheet];
+      });
+      this.externalStyleSheets = {};
+      document.querySelectorAll('.OBHTML-EXTERNAL-CSS').forEach(element => {
+        element.remove();
+      });
+    } catch (error) {if(this.log.error == true) {console.error(error);};};
+  }
+
+  getExternalStyleSheets() {
+    try {
+      return JSON.stringify(Object.keys(this.externalStyleSheets));
+    } catch (error) {if(this.log.error == true) {console.error(error);}; return '[]'};
+  }
+
+  // Individual Styles
   setStyle(args) {
     try {
-      document.querySelectorAll(args.selector)[args.index - 1].style[args.style] = args.value;
-    } catch (error) {if(this.log) console.error(error)}
+      document.querySelectorAll(args.selector)[args.index - 1].style[args.style] = purifyText(args.value);
+    } catch (error) {if(this.log.error == true) console.error(error)}
   }
 
   setStyleAll(args) {
     try {
       document.querySelectorAll(args.selector).forEach((element) => {
-      (element).style[args.style] = args.value;
-    });
-    } catch (error) {if(this.log) console.error(error);}
+        (element).style[args.style] = purifyText(args.value);
+      });
+    } catch (error) {if(this.log.error == true) console.error(error);}
   }
 
   getStyle(args) {
     try {
-    return document.querySelectorAll(args.selector)[args.index - 1].style[args.style];
+      return purifyText(document.querySelectorAll(args.selector)[args.index - 1].style[args.style]);
     } catch {
       return '';
     }
@@ -1810,21 +2033,47 @@ class OBhtml {
     try {
       let outStyles = [];
       document.querySelectorAll(''+args.selector).forEach(element => {
-        outStyles.push(element.style[''+args.style]);
+        outStyles.push(purifyText(element.style[''+args.style]));
       });
       return JSON.stringify(outStyles);
-    } catch (error) {if (this.log) {console.error(error);}; return '';};
+    } catch (error) {if(this.log.error == true) {console.error(error);}; return '';};
   }
 
   checkImportance(args) {
     try {
     return !!document.querySelectorAll(args.selector)[args.index - 1].style[args.style].trim().endsWith('!important');
     } catch (error) {
-      if(this.log) {
+      if(this.log.error == true) {
         console.error(error);
       }
       return 'false';
     }
+  }
+  //
+
+  // Custom Functions
+
+  checkFunction(args) {
+    if (this.currentFunction == args.function & this.currentFunction != null) {
+      this.currentFunction = null;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  functionChecked(args) {
+    if (this.currentFunctionCheck == args.function & this.currentFunctionCheck != null) {
+      this.currentFunctionCheck = null;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getFunctionArgs(args) {
+    const out = ''+this.functions[args.function];
+    return out == 'undefined' ? '' : out;
   }
 
 
@@ -1832,7 +2081,7 @@ class OBhtml {
   // Buttons
 
   Info() {
-  alert(` - OBhtml: MIT Licence\n\n - DOMPurify: Apache license 2.0 and Mozilla Public License 2.0\n\n - HTML5 and CSS3 Logos: CC Attribution 3.0 Unported\n - HTML5 and CSS3 icons attributed to the W3C. <https://www.w3.org/>\n\n - Due to security concerns: this extension uses DOMPurify to sanitize injected html.`)
+  alert(` - OBhtml: MIT Licence\n\n - DOMPurify: Apache license 2.0 and Mozilla Public License 2.0\n\n - Due to security concerns: this extension uses DOMPurify to sanitize injected html.`)
   }
 
   Selectors() {
@@ -1840,7 +2089,23 @@ class OBhtml {
   }
 
   onlineWarning() {
-  alert(`Warning!\nUsing this extension on projects that have online functionality is highly discouraged!\n\nFor the protection of users coming from other extensions.\n\nSuch as the marked.js extension: "markedInTurbowarp.js"\n\nThis extension uses marked.js to take markdown and output html.\n\nhttps://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/markedInTurbowarp.js \n\nShameless plug...`)
+  alert(`Warning!\nUsing this extension on projects that have online functionality is highly discouraged!\n\nFor the protection of users, any inputs that are sent or received need to be thouroughly sanitized!\n\nWhile the built in method may do this automatically, the best way to prevent attacks is to not allow connection at all.\n\nI (Otterboing) am definitely not a security expert, so this extension is probably a hazard and should be treated as such.\n\nI am not responsible for any problems that occur. 😊`)
+  }
+
+  functionInfo() {
+    alert(`Functions can be added to elements with the function attribute.\nYou can give them arguments with the args attribute.\n\nExample:\n\n<button function="doThis" args="button1">Button1</button>`);
+  }
+
+  styleSheetsInfo() {
+    alert(`StyleSheet ids can not contain spaces or any symbols besides "-" or "_".\n\nSpaces will be replaced with - and all other banned characters will be replaced by their character code.\n\nThis shouldn't cause you any trouble really since it automatically filters these out.\n\nThough if you're using json to set and parse your stylesheets, please use the (Get safe StyleSheet id) block.\n\nAllowed Characters:\n\n`+JSON.stringify(id_allowed_characters));
+  }
+
+  externalCSSInfo() {
+    alert(`External StyleSheets are added via the <link> element, not by fetching the text content of the url.\n\nDue to this they are not stored with the rest of the stylesheets, nor can we view their text content.\n\nUse the Network/fetch extension to view external files. \n(Also to verify if they exist since this doesn't do that either.) \n\nCss imported from external sources may open up you or your users to XSS attacks if using certain browsers, Please only use sources you own or trust.\n\nNote:\nSome sources may be blocked due to CORS, this extension will not bypass that, you will need to find another way.`)
+  }
+
+  sanitizeNote() {
+    alert(`All inputs in this extension are already sanitized.\n\nThese blocks exist for other extensions that take or output html that you might want to sanitize.\n\nSuch an example is markedInTurbowarp by me!\n\nhttps://github.com/otterboing/Otterboings-Turbowarp-Extensions/blob/main/Extensions/markedInTurbowarp.js`)
   }
 
   ApacheLicence() {
@@ -1848,16 +2113,6 @@ class OBhtml {
   }
   MozillaPublicLicence() {
   Scratch.openWindow('https://raw.githubusercontent.com/cure53/DOMPurify/refs/heads/main/LICENSE-MPL');
-  }
-  // CC Attribution 3.0 Unported
-  CC3AU() {
-  try {
-    if (window.confirm(`CC Attribution 3.0 Unported\n\nPress ok to go to: CC Attribution 3.0 Unported\nhttps://creativecommons.org/licenses/by/3.0\n\nPress Cancel to go to: Plain Text\nhttps://creativecommons.org/licenses/by/3.0/legalcode.txt`)) {
-    Scratch.openWindow('https://creativecommons.org/licenses/by/3.0');
-    } else {
-    Scratch.openWindow('https://creativecommons.org/licenses/by/3.0/legalcode.txt')
-    }
-    } catch {}
   }
   
 }
